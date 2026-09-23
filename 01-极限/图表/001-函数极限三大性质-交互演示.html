@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>函数极限三大性质 · 交互演示</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --page:#F7F6F2; --fg:#1F1F1E; --muted:#6B6B66; --hint:#9A9992;
+    --border:rgba(0,0,0,0.12); --border2:rgba(0,0,0,0.06);
+    --blue-f:#E6F1FB; --blue-s:#185FA5; --blue-t:#0C447C;
+    --green-f:#E1F5EE; --green-s:#0F6E56; --green-t:#085041;
+    --red-t:#A32D2D;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--fg);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       font-size:14px;line-height:1.7;font-weight:400}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:20px;font-weight:500;margin:0 0 6px}
+  h2{font-size:16px;font-weight:500;margin:0 0 12px}
+  h3{font-size:14px;font-weight:500;margin:20px 0 8px}
+  p{margin:0 0 12px}
+  .lead{color:var(--muted);margin:0 0 28px}
+  .card{background:var(--bg);border:0.5px solid var(--border);border-radius:12px;
+        padding:20px;margin:0 0 20px}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;
+       background:var(--blue-f);color:var(--blue-t);margin-right:8px;vertical-align:2px}
+  .tag.g{background:var(--green-f);color:var(--green-t)}
+  .tag.r{background:#FCEBEB;color:var(--red-t)}
+  canvas{width:100%;height:auto;display:block;border-radius:8px}
+  .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .ctl span.lb{font-size:13px;color:var(--muted);min-width:76px}
+  .ctl input[type=range]{flex:1 1 200px;min-width:150px}
+  .val{font-size:13px;min-width:46px;font-variant-numeric:tabular-nums}
+  .out{font-size:13px;line-height:1.7;margin-top:14px;color:var(--fg)}
+  .ok{color:var(--green-t)} .bad{color:var(--red-t)}
+  button{font-size:13px;padding:5px 12px;border-radius:8px;border:0.5px solid var(--border);
+         background:var(--bg);color:var(--fg);cursor:pointer;margin:0 8px 8px 0}
+  button:hover{border-color:rgba(0,0,0,0.3)}
+  button.on{background:var(--blue-f);border-color:var(--blue-s);color:var(--blue-t)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
+  th,td{border:0.5px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--page);font-weight:500}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;
+       background:var(--page);padding:1px 5px;border-radius:4px}
+  .kicker{font-size:13px;color:var(--hint);margin-top:28px;text-align:center}
+  .fx{font-family:ui-monospace,Menlo,Consolas,monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>函数极限的三大性质 · 交互演示</h1>
+  <p class="lead">有界性 ④ · 保号性 ⑤ · 不等式关系 ⑥ —— 三条性质都来自同一个机制。拖动滑块观察。</p>
+
+  <div class="card">
+    <h2><span class="tag">0</span>核心机制：ε 带 → δ 窗口</h2>
+    <p>极限存在意味着：随便画一条宽度 2ε 的横带（A±ε），总能找到一个 δ，使得 0&lt;|x−x₀|&lt;δ 内曲线完全落在带子里。ε 越小，δ 通常越小。</p>
+    <canvas id="m1" width="660" height="250"></canvas>
+    <div class="ctl">
+      <span class="lb">ε</span>
+      <input id="m1s" type="range" min="5" max="85" step="1" value="55">
+      <span class="val" id="m1v">0.55</span>
+    </div>
+    <div class="out" id="m1o"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="tag">①</span>④ 极限的有界性</h2>
+    <p>取 ε = 1，得 |f(x)| ≤ |A| + 1。所以「极限存在 ⇒ 局部有界」。注意「局部」二字：窗口开得越大，所需的界 M 就越大。下面 f(x) = 1/x，x₀ = 1。</p>
+    <canvas id="m2" width="660" height="250"></canvas>
+    <div class="ctl">
+      <span class="lb">邻域半径 r</span>
+      <input id="m2s" type="range" min="5" max="80" step="1" value="40">
+      <span class="val" id="m2v">0.40</span>
+    </div>
+    <div class="out" id="m2o"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="tag">②</span>⑤ 极限的保号性</h2>
+    <p>正向取 ε = A/2，邻域内 f &gt; A/2 &gt; 0；反向只能得到 A ≥ 0，推不出 A &gt; 0。</p>
+    <div>
+      <button id="m3a" class="on">正例：A &gt; 0 ⇒ 附近 f &gt; 0</button>
+      <button id="m3b">反例：f &gt; 0 ⇏ A &gt; 0</button>
+    </div>
+    <canvas id="m3" width="660" height="250"></canvas>
+    <div class="ctl" id="m3c">
+      <span class="lb">极限值 A</span>
+      <input id="m3s" type="range" min="20" max="100" step="1" value="60">
+      <span class="val" id="m3v">0.60</span>
+    </div>
+    <div class="out" id="m3o"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="tag">③</span>⑥ 极限的不等式关系</h2>
+    <p>令 h = f − g，就归约到 ⑤：A &gt; B ⇒ 附近 f &gt; g；反之只能得 A ≥ B。注意保证只在 x₀ 附近成立，窗口外曲线照样交叉。</p>
+    <div>
+      <button id="m4a" class="on">正例：A &gt; B ⇒ 附近 f &gt; g</button>
+      <button id="m4b">反例：f &gt; g ⇏ A &gt; B</button>
+    </div>
+    <canvas id="m4" width="660" height="250"></canvas>
+    <div class="ctl" id="m4c">
+      <span class="lb">极限之差 A−B</span>
+      <input id="m4s" type="range" min="15" max="120" step="1" value="45">
+      <span class="val" id="m4v">0.45</span>
+    </div>
+    <div class="out" id="m4o"></div>
+  </div>
+
+  <div class="card">
+    <h2>总结</h2>
+    <table>
+      <tr><th>性质</th><th>已知</th><th>可得</th><th>证明抓手</th><th>反向成立吗</th></tr>
+      <tr><td>④ 有界性</td><td>lim f = A 存在</td><td>∃M, δ：邻域内 |f| ≤ M</td><td>取 ε = 1，M = |A|+1</td><td>✗ 局部有界 ⇏ 极限存在（sin(1/x)）</td></tr>
+      <tr><td>⑤ 保号性（正向）</td><td>A &gt; 0</td><td>附近 f &gt; 0</td><td>取 ε = A/2</td><td>✗ 反例 2.5x²</td></tr>
+      <tr><td>⑤ 保号性（反向）</td><td>附近 f ≥ 0</td><td>A ≥ 0</td><td>反证法</td><td>—</td></tr>
+      <tr><td>⑥ 不等式（正向）</td><td>A &gt; B</td><td>附近 f &gt; g</td><td>令 h = f−g，用 ⑤</td><td>✗ 反例 0.5+2.5x²</td></tr>
+      <tr><td>⑥ 不等式（反向）</td><td>附近 f ≥ g</td><td>A ≥ B</td><td>归到 ⑤</td><td>—</td></tr>
+    </table>
+    <h3>一句话记忆</h3>
+    <p><strong>从极限推函数，严格号能保住；从函数推极限，严格号一定降级成非严格号。</strong></p>
+    <p class="fx" style="color:var(--muted)">配套直觉：题目说「已知 f(x) &gt; 0，证明 A &gt; 0」——条件一定不够，必定还要补信息（如 f 连续且某点为正，或能先证 A ≠ 0）。</p>
+  </div>
+
+  <p class="kicker">考研数学二 · 第 1 章 极限 · 答疑 001 · 直接双击本文件即可在浏览器中交互</p>
+</div>
+
+<script>
+(function(){
+ var g1=document.getElementById('m1').getContext('2d');
+ var W=660,H=250;
+ var s1=document.getElementById('m1s'),v1=document.getElementById('m1v'),o1=document.getElementById('m1o');
+ var xm1=-2,xM1=2,ym1=-0.6,yM1=2.6,A1=1,st=0.0015;
+ function X1(x){return (x-xm1)/(xM1-xm1)*W}
+ function Y1(y){return H-(y-ym1)/(yM1-ym1)*H}
+ function f1(x){return A1+0.9*Math.sin(5*x)}
+ function draw1(){
+  var e=parseInt(s1.value,10)/100;v1.textContent=e.toFixed(2);
+  g1.clearRect(0,0,W,H);
+  g1.fillStyle='#E6F1FB';g1.fillRect(0,Y1(A1+e),W,Y1(A1-e)-Y1(A1+e));
+  g1.strokeStyle='#185FA5';g1.lineWidth=1;g1.setLineDash([5,4]);
+  g1.beginPath();g1.moveTo(0,Y1(A1+e));g1.lineTo(W,Y1(A1+e));g1.stroke();
+  g1.beginPath();g1.moveTo(0,Y1(A1-e));g1.lineTo(W,Y1(A1-e));g1.stroke();
+  g1.setLineDash([]);
+  var d=0;for(var x=0;x<xM1;x+=st){if(Math.abs(f1(x)-A1)<=e){d=x}else{break}}
+  g1.fillStyle='rgba(29,158,117,0.14)';g1.fillRect(X1(-d),0,X1(d)-X1(-d),H);
+  g1.strokeStyle='#B4B2A9';g1.lineWidth=1;
+  g1.beginPath();g1.moveTo(0,Y1(A1));g1.lineTo(W,Y1(A1));g1.stroke();
+  g1.beginPath();g1.moveTo(X1(0),0);g1.lineTo(X1(0),H);g1.stroke();
+  g1.lineWidth=2;g1.strokeStyle='#0F6E56';g1.beginPath();
+  for(var t=xm1;t<=xM1;t+=st*4){var px=X1(t),py=Y1(f1(t));if(t===xm1){g1.moveTo(px,py)}else{g1.lineTo(px,py)}}
+  g1.stroke();
+  g1.fillStyle='#185FA5';g1.beginPath();g1.arc(X1(0),Y1(A1),4,0,6.284);g1.fill();
+  g1.font='12px sans-serif';g1.textAlign='left';
+  g1.fillStyle='#0C447C';g1.fillText('A = 1',X1(0)+9,Y1(A1)-9);
+  g1.fillStyle='#185FA5';g1.fillText('A+ε',6,Y1(A1+e)-6);g1.fillText('A−ε',6,Y1(A1-e)+14);
+  g1.fillStyle='#0F6E56';g1.fillText('δ',X1(d)+5,Y1(A1)-9);g1.fillText('−δ',X1(-d)-22,Y1(A1)-9);
+  o1.innerHTML='ε = '+e.toFixed(2)+' 时，取 <b>δ = '+d.toFixed(2)+'</b>，则在 0&lt;|x|&lt;δ 内恒有 |f(x) − A| &lt; ε。<br>把 ε 拖小，δ 会跟着缩小 —— 这就是「局部」的含义。';
+ }
+ s1.addEventListener('input',draw1);draw1();
+
+ var g2=document.getElementById('m2').getContext('2d');
+ var s2=document.getElementById('m2s'),v2=document.getElementById('m2v'),o2=document.getElementById('m2o');
+ var xm2=0.1,xM2=2.4,ym2=-0.4,yM2=5.6,x02=1,A2=1,M2=2;
+ function X2(x){return (x-xm2)/(xM2-xm2)*W}
+ function Y2(y){return H-(y-ym2)/(yM2-ym2)*H}
+ function f2(x){return 1/x}
+ function draw2(){
+  var r=parseInt(s2.value,10)/100;v2.textContent=r.toFixed(2);
+  g2.clearRect(0,0,W,H);
+  g2.strokeStyle='#B4B2A9';g2.lineWidth=1;
+  g2.beginPath();g2.moveTo(0,Y2(0));g2.lineTo(W,Y2(0));g2.stroke();
+  g2.beginPath();g2.moveTo(X2(0.1),0);g2.lineTo(X2(0.1),H);g2.stroke();
+  g2.fillStyle='rgba(29,158,117,0.13)';g2.fillRect(X2(x02-r),0,X2(x02+r)-X2(x02-r),H);
+  g2.strokeStyle='#185FA5';g2.lineWidth=1;g2.setLineDash([5,4]);
+  g2.beginPath();g2.moveTo(0,Y2(M2));g2.lineTo(W,Y2(M2));g2.stroke();
+  g2.setLineDash([]);
+  g2.lineWidth=2;g2.strokeStyle='#0F6E56';g2.beginPath();
+  var first=true;
+  for(var t=xm2;t<=xM2;t+=0.002){var px=X2(t),py=Y2(f2(t));if(first){g2.moveTo(px,py);first=false}else{g2.lineTo(px,py)}}
+  g2.stroke();
+  g2.fillStyle='#185FA5';g2.beginPath();g2.arc(X2(x02),Y2(A2),4,0,6.284);g2.fill();
+  g2.font='12px sans-serif';g2.textAlign='left';
+  g2.fillStyle='#0C447C';g2.fillText('A = 1  (x₀ = 1)',X2(x02)+9,Y2(A2)-9);
+  g2.fillStyle='#185FA5';g2.fillText('M = |A| + 1 = 2',6,Y2(M2)-6);
+  g2.fillStyle='#0F6E56';g2.fillText('x₀−r',X2(x02-r)-26,Y2(3.2));g2.fillText('x₀+r',X2(x02+r)+4,Y2(3.2));
+  var mx=1/(1-r),ok=mx<=M2+1e-9;
+  o2.innerHTML='窗口 (x₀−r, x₀+r) = ('+(x02-r).toFixed(2)+', '+(x02+r).toFixed(2)+')　窗口内 |f| 最大 = <b>'+mx.toFixed(2)+'</b><br>'+(ok?'<span class="ok">≤ M = 2，取 M = |A|+1 就够 ✓</span>':'<span class="bad">&gt; M = 2，需要换一个更大的 M</span>');
+ }
+ s2.addEventListener('input',draw2);draw2();
+
+ var g3=document.getElementById('m3').getContext('2d');
+ var mode3=1,xm3,xM3,ym3,yM3;
+ var b3a=document.getElementById('m3a'),b3b=document.getElementById('m3b'),s3=document.getElementById('m3s'),v3=document.getElementById('m3v'),o3=document.getElementById('m3o'),c3=document.getElementById('m3c');
+ function X3(x){return (x-xm3)/(xM3-xm3)*W}
+ function Y3(y){return H-(y-ym3)/(yM3-ym3)*H}
+ function set3(a,b,c,d){xm3=a;xM3=b;ym3=c;yM3=d}
+ function axes3(){
+  g3.strokeStyle='#B4B2A9';g3.lineWidth=1;
+  g3.beginPath();g3.moveTo(0,Y3(0));g3.lineTo(W,Y3(0));g3.stroke();
+  g3.beginPath();g3.moveTo(X3(0),0);g3.lineTo(X3(0),H);g3.stroke();
+ }
+ function curve3(f,c){
+  g3.lineWidth=2;g3.strokeStyle=c;g3.beginPath();var first=true,st=(xM3-xm3)/900;
+  for(var t=xm3;t<=xM3;t+=st){var px=X3(t),py=Y3(f(t));if(first){g3.moveTo(px,py);first=false}else{g3.lineTo(px,py)}}
+  g3.stroke();
+ }
+ function draw3(){
+  g3.clearRect(0,0,W,H);
+  g3.font='12px sans-serif';g3.textAlign='left';
+  if(mode3===1){
+   var A=parseInt(s3.value,10)/100;v3.textContent=A.toFixed(2);
+   set3(-1.2,1.2,-1.1,2.3);
+   var f=function(x){return A+1.1*Math.sin(5*x)};
+   var e=A/2,dp=Math.asin(Math.min(A/1.1,1))/5,de=Math.asin(Math.min(A/2.2,1))/5;
+   g3.fillStyle='#E6F1FB';g3.fillRect(0,Y3(A+e),W,Y3(A-e)-Y3(A+e));
+   g3.strokeStyle='#185FA5';g3.lineWidth=1;g3.setLineDash([5,4]);
+   g3.beginPath();g3.moveTo(0,Y3(A+e));g3.lineTo(W,Y3(A+e));g3.stroke();
+   g3.beginPath();g3.moveTo(0,Y3(A-e));g3.lineTo(W,Y3(A-e));g3.stroke();
+   g3.setLineDash([]);
+   g3.fillStyle='rgba(29,158,117,0.15)';g3.fillRect(X3(-dp),0,X3(dp)-X3(-dp),H);
+   axes3();
+   g3.strokeStyle='#1D9E75';g3.lineWidth=1;
+   g3.beginPath();g3.moveTo(X3(-de),0);g3.lineTo(X3(-de),H);g3.stroke();
+   g3.beginPath();g3.moveTo(X3(de),0);g3.lineTo(X3(de),H);g3.stroke();
+   curve3(f,'#0F6E56');
+   g3.fillStyle='#185FA5';g3.beginPath();g3.arc(X3(0),Y3(A),4,0,6.284);g3.fill();
+   g3.fillStyle='#0F6E56';g3.fillText('δ',X3(xm3/2)-3,Y3(0.35));g3.fillText('−δ',X3(-xm3/2)+6,Y3(0.35));
+   o3.innerHTML='A = '+A.toFixed(2)+'　保号窗口 δ = arcsin(A/1.1)/5 = <b>'+dp.toFixed(3)+'</b>（蓝线内是 ε = A/2 的强保证窗口，δ = '+de.toFixed(3)+'）<br><span class="ok">A &gt; 0 ⇒ 窗口内 f &gt; 0 ✓　（因为 f &gt; A/2 &gt; 0）</span>';
+  }else{
+   set3(-1.2,1.2,-0.5,3.7);
+   var f2=function(x){return 2.5*x*x};
+   g3.fillStyle='rgba(29,158,117,0.15)';g3.fillRect(X3(-0.4),0,X3(0.4)-X3(-0.4),H);
+   axes3();
+   g3.strokeStyle='#1D9E75';g3.lineWidth=1;g3.setLineDash([5,4]);
+   g3.beginPath();g3.moveTo(X3(0),0);g3.lineTo(X3(0),H);g3.stroke();
+   g3.setLineDash([]);
+   curve3(f2,'#0F6E56');
+   g3.fillStyle='#185FA5';g3.beginPath();g3.arc(X3(0),Y3(0),4,0,6.284);g3.fill();
+   g3.fillStyle='#0C447C';g3.fillText('f(x) = 2.5x²',X3(0.55),Y3(3.2));
+   g3.fillStyle='#A32D2D';g3.fillText('极限 A = 0',X3(0)+9,Y3(0)+16);
+   o3.innerHTML='在任意（去心）邻域内都有 f(x) = 2.5x² &gt; 0，<br>但 lim f(x) = <b>0</b>，并不 &gt; 0 —— 严格不等号被磨平了。<br><span class="bad">所以反方向只能得到 A ≥ 0，不能得到 A &gt; 0</span>';
+  }
+ }
+ b3a.addEventListener('click',function(){mode3=1;b3a.className='on';b3b.className='';c3.style.display='flex';draw3()});
+ b3b.addEventListener('click',function(){mode3=2;b3b.className='on';b3a.className='';c3.style.display='none';draw3()});
+ s3.addEventListener('input',draw3);draw3();
+
+ var g4=document.getElementById('m4').getContext('2d');
+ var mode4=1,xm4,xM4,ym4,yM4,B4=0.6;
+ var b4a=document.getElementById('m4a'),b4b=document.getElementById('m4b'),s4=document.getElementById('m4s'),v4=document.getElementById('m4v'),o4=document.getElementById('m4o'),c4=document.getElementById('m4c');
+ function X4(x){return (x-xm4)/(xM4-xm4)*W}
+ function Y4(y){return H-(y-ym4)/(yM4-ym4)*H}
+ function set4(a,b,c,d){xm4=a;xM4=b;ym4=c;yM4=d}
+ function axes4(){
+  g4.strokeStyle='#B4B2A9';g4.lineWidth=1;
+  g4.beginPath();g4.moveTo(0,Y4(0));g4.lineTo(W,Y4(0));g4.stroke();
+  g4.beginPath();g4.moveTo(X4(0),0);g4.lineTo(X4(0),H);g4.stroke();
+ }
+ function curve4(f,c){
+  g4.lineWidth=2;g4.strokeStyle=c;g4.beginPath();var first=true,st=(xM4-xm4)/900;
+  for(var t=xm4;t<=xM4;t+=st){var px=X4(t),py=Y4(f(t));if(first){g4.moveTo(px,py);first=false}else{g4.lineTo(px,py)}}
+  g4.stroke();
+ }
+ function draw4(){
+  g4.clearRect(0,0,W,H);
+  g4.font='12px sans-serif';g4.textAlign='left';
+  if(mode4===1){
+   var d=parseInt(s4.value,10)/100;v4.textContent=d.toFixed(2);
+   set4(-2.5,2.5,-0.5,2.6);
+   var A=B4+d;
+   var w=function(x){return 0.35*Math.sin(2.5*x)};
+   var f=function(x){return A+w(x)+0.15*x}, gg=function(x){return B4+w(x)-0.15*x};
+   var xc=-d/0.3, dl=Math.min(d/0.3,2.5);
+   g4.fillStyle='rgba(29,158,117,0.13)';g4.fillRect(X4(-dl),0,X4(dl)-X4(-dl),H);
+   axes4();
+   curve4(f,'#0F6E56');curve4(gg,'#185FA5');
+   g4.fillStyle='#185FA5';
+   g4.beginPath();g4.arc(X4(0),Y4(A),3.5,0,6.284);g4.fill();
+   g4.beginPath();g4.arc(X4(0),Y4(B4),3.5,0,6.284);g4.fill();
+   if(xc>-2.5){g4.fillStyle='#A32D2D';g4.beginPath();g4.arc(X4(xc),Y4(f(xc)),4,0,6.284);g4.fill();
+    g4.fillText('交叉点 x ≈ '+xc.toFixed(2),X4(xc)-30,Y4(0.15));}
+   g4.fillStyle='#0C447C';g4.fillText('A = '+A.toFixed(2)+'  (f)',X4(0)+8,Y4(A)-8);
+   g4.fillStyle='#185FA5';g4.fillText('B = '+B4.toFixed(2)+'  (g)',X4(0)+8,Y4(B4)+16);
+   o4.innerHTML='A = '+A.toFixed(2)+'，B = '+B4.toFixed(2)+'，A − B = <b>'+d.toFixed(2)+'</b><br>取 δ = <b>'+dl.toFixed(2)+'</b>（绿窗），则 0 &lt; |x| &lt; δ 时恒有 f(x) &gt; g(x)。<br><span class="ok">注意：窗口外（红点左侧）曲线照样会交叉 —— 保证是局部的</span>';
+  }else{
+   set4(-1.2,1.2,-0.2,4.2);
+   var f2=function(x){return 0.5+2.5*x*x}, g2=function(x){return 0.5};
+   g4.fillStyle='rgba(29,158,117,0.13)';g4.fillRect(X4(-0.5),0,X4(0.5)-X4(-0.5),H);
+   axes4();
+   curve4(f2,'#0F6E56');curve4(g2,'#185FA5');
+   g4.fillStyle='#0C447C';g4.fillText('f(x) = 0.5 + 2.5x²',X4(0.45),Y4(3.6));
+   g4.fillStyle='#185FA5';g4.fillText('g(x) = 0.5',X4(-1.15),Y4(0.5)-8);
+   o4.innerHTML='在任意去心邻域内都有 f(x) &gt; g(x)，<br>但 lim f = lim g = <b>0.5</b>，即 A = B，并不 A &gt; B。<br><span class="bad">所以反方向只能得到 A ≥ B —— 严格号降级成非严格号</span>';
+  }
+ }
+ b4a.addEventListener('click',function(){mode4=1;b4a.className='on';b4b.className='';c4.style.display='flex';draw4()});
+ b4b.addEventListener('click',function(){mode4=2;b4b.className='on';b4a.className='';c4.style.display='none';draw4()});
+ s4.addEventListener('input',draw4);draw4();
+})();
+</script>
+</body>
+</html>
