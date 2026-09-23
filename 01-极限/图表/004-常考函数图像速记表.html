@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数二常考函数图像速记表</title>
+<style>
+:root{
+  --bg:#fbfbf9; --card:#ffffff; --line:#e5e4df; --text:#17171a; --muted:#6d6d73;
+  --curve:#185FA5; --pt:#D85A30; --open:#D4537E; --axis:#9a9a9f; --grid:#eeede7;
+  --chip:#f2f1ec; --chipon:#0C447C;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#191919; --card:#232325; --line:#343437; --text:#ececef; --muted:#9c9ca3;
+    --curve:#85B7EB; --pt:#F0997B; --open:#ED93B1; --axis:#6c6c73; --grid:#2b2b2e;
+    --chip:#2b2b2e; --chipon:#B5D4F4;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:28px 20px 60px; background:var(--bg); color:var(--text);
+  font-family:-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  font-size:14px; line-height:1.6;
+}
+.wrap{max-width:1200px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+input[type=search]{
+  flex:1 1 240px; min-width:200px; padding:8px 12px; font-size:13px;
+  border:1px solid var(--line); border-radius:8px; background:var(--card); color:var(--text);
+  font-family:inherit;
+}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{
+  padding:7px 13px; font-size:12.5px; border:1px solid var(--line); background:var(--card);
+  color:var(--text); border-radius:999px; cursor:pointer; font-family:inherit;
+}
+.chips button.on{background:var(--chipon);border-color:var(--chipon);color:#fff}
+@media (prefers-color-scheme: dark){ .chips button.on{color:#0b0b0c} }
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px 13px;display:flex;flex-direction:column;
+}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.expr{font-size:15px;font-weight:500;letter-spacing:.2px}
+.tag{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.cvs{position:relative;margin:0 -2px 10px}
+canvas{display:block;width:100%;height:172px;border-radius:8px}
+.readout{
+  position:absolute;top:6px;right:6px;font-size:11.5px;padding:3px 8px;border-radius:6px;
+  background:var(--chip);color:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none;
+  opacity:0;transition:opacity .12s;
+}
+.cvs:hover .readout{opacity:1}
+.facts{margin:0 0 8px;font-size:12.5px;color:var(--muted)}
+.facts div{display:flex;gap:8px;padding:1px 0}
+.facts dt{flex:0 0 46px;color:var(--muted);opacity:.8}
+.facts dd{margin:0;color:var(--text);opacity:.85}
+.plist{list-style:none;margin:0;padding:0;font-size:12.5px}
+.plist li{display:flex;gap:8px;padding:2px 0;color:var(--muted)}
+.plist b{font-weight:400;color:var(--text);font-variant-numeric:tabular-nums;min-width:74px}
+.note{
+  margin:9px 0 0;padding-top:9px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--muted);
+}
+.note::before{content:"考点 ";opacity:.7}
+.tblwrap{display:none;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:500;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.empty{color:var(--muted);padding:40px 0;text-align:center;grid-column:1/-1}
+@media print{
+  body{background:#fff;padding:0}
+  .toolbar{display:none}
+  .grid{display:none}
+  .tblwrap{display:block}
+  table{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>数二常考函数图像速记表</h1>
+<p class="sub">鼠标移到图上任意位置 → 读出该点坐标（右上角）。红点是特殊点，空心点是「取不到」的点，虚线是渐近线。</p>
+
+<div class="toolbar">
+  <input type="search" id="q" placeholder="搜索：函数名或关键词，如 sin、间断、有界、渐近线">
+  <div class="chips" id="chips">
+    <button data-g="all" class="on">全部</button>
+    <button data-g="basic">基本初等</button>
+    <button data-g="trig">三角·反三角</button>
+    <button data-g="limit">极限与间断</button>
+    <button data-g="shape">变形·复合</button>
+    <button data-g="table">表格速查</button>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+<div class="tblwrap" id="tblwrap">
+  <table id="tbl">
+    <thead><tr><th>函数</th><th>定义域</th><th>值域</th><th>渐近线</th><th>极值 / 特殊点</th><th>考点</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+</div>
+
+<script>
+var P = Math.PI;
+var F = [
+{id:'sq',g:'basic',e:'y = x²',tag:'偶函数·抛物线',v:[-3.2,3.2,-1.2,9.5],f:function(x){return x*x},
+ dom:'(−∞, +∞)',rng:'[0, +∞)',asym:'无',mono:'(−∞,0)↓，(0,+∞)↑',
+ pts:[[0,0,'极小值 0'],[1,1,''],[2,4,'']],al:[],
+ note:'最基础的抛物线。复合后处处出现（如 u=x² 换元）。'},
+
+{id:'cu',g:'basic',e:'y = x³',tag:'奇函数·拐点',v:[-2.1,2.1,-8,8],f:function(x){return x*x*x},
+ dom:'(−∞, +∞)',rng:'(−∞, +∞)',asym:'无',mono:'全程递增',
+ pts:[[0,0,'拐点·对称中心'],[1,1,''],[2,8,'']],al:[],
+ note:'奇函数，关于原点对称。x=0 处 f″=0 且变号，是拐点。'},
+
+{id:'inv',g:'basic',e:'y = 1/x',tag:'无穷间断·双曲线',v:[-5,5,-5,5],f:function(x){return 1/x},
+ dom:'x ≠ 0',rng:'y ≠ 0',asym:'x=0（垂直）· y=0（水平）',mono:'(−∞,0)↓，(0,+∞)↓（不可合并说）',
+ pts:[[1,1,''],[2,.5,'']],al:[{t:'v',x:0},{t:'h',y:0}],
+ note:'第二类·无穷间断。注意：不能写「在定义域上单调递减」，因左右两支断开。'},
+
+{id:'sqrt',g:'basic',e:'y = √x',tag:'定义域受限',v:[-0.6,9.5,-0.6,3.3],f:function(x){return x<0?NaN:Math.sqrt(x)},
+ dom:'[0, +∞)',rng:'[0, +∞)',asym:'无',mono:'递增，增速递减',
+ pts:[[0,0,'端点'],[1,1,''],[4,2,'']],al:[],
+ note:'x=0 处切线垂直，右导数不存在。'},
+
+{id:'ex',g:'basic',e:'y = eˣ',tag:'恒正·增长最快',v:[-3,2.6,-0.6,8],f:function(x){return Math.exp(x)},
+ dom:'(−∞, +∞)',rng:'(0, +∞)',asym:'y=0（x→−∞，水平）',mono:'全程递增',
+ pts:[[0,1,'过 (0,1)'],[1,Math.E,'']],al:[{t:'h',y:0}],
+ note:'导数是自身。x→−∞ 时趋于 0 但恒大于 0。'},
+
+{id:'ln',g:'basic',e:'y = ln x',tag:'垂直渐近线',v:[-0.6,6.5,-3.2,3.2],f:function(x){return x<=0?NaN:Math.log(x)},
+ dom:'(0, +∞)',rng:'(−∞, +∞)',asym:'x=0（垂直）',mono:'全程递增，增速递减',
+ pts:[[1,0,'过 (1,0)'],[Math.E,1,'']],al:[{t:'v',x:0}],
+ note:'与 y=eˣ 关于直线 y=x 对称。x→0⁺ 时趋于 −∞。'},
+
+{id:'emx',g:'basic',e:'y = e⁻ˣ',tag:'衰减模型',v:[-2.5,5,-0.6,7],f:function(x){return Math.exp(-x)},
+ dom:'(−∞, +∞)',rng:'(0, +∞)',asym:'y=0（x→+∞，水平）',mono:'全程递减',
+ pts:[[0,1,'过 (0,1)'],[1,1/Math.E,'']],al:[{t:'h',y:0}],
+ note:'阻尼、放射性衰变、RC 放电的通用曲线形状。'},
+
+{id:'xemx',g:'basic',e:'y = x·e⁻ˣ',tag:'考最大值',v:[-1.8,7,-1.3,1],f:function(x){return x*Math.exp(-x)},
+ dom:'(−∞, +∞)',rng:'(−∞, 1/e]',asym:'y=0（x→+∞，水平）',mono:'(−∞,1)↑，(1,+∞)↓',
+ pts:[[0,0,''],[1,1/Math.E,'极大值 1/e ≈ 0.368'],[2,2/(Math.E*Math.E),'拐点']],al:[{t:'h',y:0}],
+ note:'令 f′=e⁻ˣ(1−x)=0 得 x=1。最值题的标准模型。'},
+
+{id:'sin',g:'trig',e:'y = sin x',tag:'周期 2π·有界',v:[-7,7,-1.75,1.75],f:function(x){return Math.sin(x)},
+ dom:'(−∞, +∞)',rng:'[−1, 1]',asym:'无',mono:'周期 2π，每 [−π/2+2kπ, π/2+2kπ] 递增',
+ pts:[[0,0,''],[P/2,1,'极大 1'],[P,0,''],[3*P/2,-1,'极小 −1']],al:[],pik:1,
+ note:'x→∞ 时在 −1 与 1 间振荡，极限不存在。有界 ≠ 收敛。'},
+
+{id:'cos',g:'trig',e:'y = cos x',tag:'周期 2π·偶函数',v:[-7,7,-1.75,1.75],f:function(x){return Math.cos(x)},
+ dom:'(−∞, +∞)',rng:'[−1, 1]',asym:'无',mono:'周期 2π，每 [2kπ, π+2kπ] 递减',
+ pts:[[0,1,'极大 1'],[P/2,0,''],[P,-1,'极小 −1']],al:[],pik:1,
+ note:'cos x = sin(x + π/2)；同样在 ±∞ 处无极限。'},
+
+{id:'tan',g:'trig',e:'y = tan x',tag:'无穷间断·周期 π',v:[-4.8,4.8,-4,4],f:function(x){return Math.tan(x)},
+ dom:'x ≠ π/2 + kπ',rng:'(−∞, +∞)',asym:'x = π/2 + kπ（垂直，无穷多条）',mono:'每个 (kπ−π/2, kπ+π/2) 内递增',
+ pts:[[0,0,''],[P/4,1,'']],al:[{t:'v',x:-3*P/2},{t:'v',x:-P/2},{t:'v',x:P/2},{t:'v',x:3*P/2}],pik:1,
+ note:'第二类·无穷间断。x→(π/2)⁻ 趋于 +∞，x→(π/2)⁺ 趋于 −∞，左右极限都「不存在」（不是无穷）。'},
+
+{id:'asin',g:'trig',e:'y = arcsin x',tag:'有界·端点垂直',v:[-1.35,1.35,-1.85,1.85],f:function(x){return (x<-1||x>1)?NaN:Math.asin(x)},
+ dom:'[−1, 1]',rng:'[−π/2, π/2]',asym:'无',mono:'全程递增',
+ pts:[[0,0,''],[1,P/2,'π/2 ≈ 1.571'],[-1,-P/2,'']],al:[],
+ note:'奇函数。端点 ±1 处切线垂直（导数不存在）。'},
+
+{id:'atan',g:'trig',e:'y = arctan x',tag:'两条水平渐近线',v:[-8,8,-1.95,1.95],f:function(x){return Math.atan(x)},
+ dom:'(−∞, +∞)',rng:'(−π/2, π/2)',asym:'y = ±π/2（水平）',mono:'全程递增',
+ pts:[[0,0,''],[1,P/4,'π/4 ≈ 0.785'],[Math.sqrt(3),P/3,'']],al:[{t:'h',y:P/2},{t:'h',y:-P/2}],
+ note:'整体有界且有极限。与 sin x 对比：这里 x→±∞ 极限存在（±π/2）。'},
+
+{id:'sx',g:'limit',e:'y = sin x / x',tag:'可去间断·第一个重要极限',v:[-10,10,-0.65,1.35],f:function(x){return Math.abs(x)<1e-9?NaN:Math.sin(x)/x},
+ dom:'x ≠ 0（可去）',rng:'[−0.217, 1]',asym:'y=0（双侧水平）',mono:'偶函数；(0,π) 递减，之后振荡趋 0',
+ pts:[[0,1,'(0,1) 可去间断·补上即连续',1],[P,0,''],[2*P,0,'']],al:[{t:'h',y:0}],
+ note:'lim(x→0) sinx/x = 1。全卷最高频的极限之一。'},
+
+{id:'exp1',g:'limit',e:'y = (1 + 1/x)ˣ',tag:'第二个重要极限',v:[-8,8,-0.3,5],f:function(x){return (Math.abs(x)<1e-9||(x>-1&&x<0))?NaN:Math.pow(1+1/x,x)},
+ dom:'x ≠ 0 且 x ∉ (−1, 0]',rng:'单调递增，以 e 为上界',asym:'y = e（双侧水平）',mono:'全程递增',
+ pts:[[1,2,'x=1 时取 2'],[-2,4,''],[-1.5,Math.pow(1+1/-1.5,-1.5),'']],al:[{t:'h',y:Math.E}],
+ note:'lim(x→∞)(1+1/x)ˣ = e ≈ 2.718。x<0 一侧从上方逼近 e，是「单调有界必有极限」的样板。'},
+
+{id:'s1x',g:'limit',e:'y = sin(1/x)',tag:'振荡间断·经典反例',v:[-0.55,0.55,-1.65,1.65],f:function(x){return x===0?NaN:Math.sin(1/x)},
+ dom:'x ≠ 0',rng:'[−1, 1]',asym:'无',mono:'x→0 时无限次上下摆振',
+ pts:[[1/P,0,'']],al:[],
+ note:'第二类·振荡间断。有界（|y|≤1）但 x→0 极限不存在——「有界 ⇏ 极限存在」的标准反例。'},
+
+{id:'xs1x',g:'limit',e:'y = x·sin(1/x)',tag:'无穷小×有界',v:[-0.5,0.5,-0.55,0.55],f:function(x){return x===0?0:x*Math.sin(1/x)},
+ dom:'x ≠ 0（x=0 可补定义 0）',rng:'[−|x|, |x|] 夹在两条抛物线间',asym:'无',mono:'—',
+ pts:[[0,0,'(0,0) 可去间断',1],[1/P,0,'']],al:[],
+ note:'被 y=±x 夹住（夹逼准则）。「无穷小 × 有界函数 = 无穷小」的活体图。和上一张对照着记。'},
+
+{id:'absx',g:'limit',e:'y = |x| / x',tag:'跳跃间断',v:[-3,3,-2,2],f:function(x){return x>0?1:(x<0?-1:NaN)},
+ dom:'x ≠ 0',rng:'{−1, 1}',asym:'无（左 y=−1，右 y=1）',mono:'分段常值',
+ pts:[[0,1,'x→0⁺ 极限 1',1],[0,-1,'x→0⁻ 极限 −1',1]],al:[],
+ note:'第一类·跳跃间断。左右极限都存在但不相等——判定间断点类型的样板。'},
+
+{id:'at1x',g:'limit',e:'y = arctan(1/x)',tag:'跳跃间断',v:[-4,4,-2,2],f:function(x){return x===0?NaN:Math.atan(1/x)},
+ dom:'x ≠ 0',rng:'(−π/2, π/2)',asym:'y = ±π/2（x→0 两侧）· y = 0（x→±∞）',mono:'两支各自递增',
+ pts:[[0,P/2,'x→0⁺ 极限 π/2',1],[0,-P/2,'x→0⁻ 极限 −π/2',1]],al:[{t:'h',y:0}],
+ note:'第一类·跳跃间断。同时兼具水平渐近线 y=0，一图两考。'},
+
+{id:'e1x',g:'limit',e:'y = e^(1/x)',tag:'无穷间断·左右不对称',v:[-3.5,3.5,-0.6,6],f:function(x){return x===0?NaN:Math.exp(1/x)},
+ dom:'x ≠ 0',rng:'(0, +∞)',asym:'x=0（垂直）· y=1（双侧水平）',mono:'(−∞,0)↓，(0,+∞)↓',
+ pts:[[0,0,'x→0⁻ 极限 0',1],[1,Math.E,'x=1 时取 e']],al:[{t:'v',x:0},{t:'h',y:1}],
+ note:'第二类·无穷间断。左极限 0、右极限 +∞，左右完全不同——最容易记成「无穷间断」的陷阱题。'},
+
+{id:'rx',g:'limit',e:'y = (x² − 1)/(x − 1)',tag:'可去间断·0/0 原型',v:[-1.5,4,-0.8,5],f:function(x){return Math.abs(x-1)<1e-9?NaN:(x*x-1)/(x-1)},
+ dom:'x ≠ 1（可去）',rng:'y ≠ 2',asym:'无（约分后是直线 y=x+1）',mono:'全程递增（直线）',
+ pts:[[1,2,'(1,2) 可去间断·补上即连续',1],[0,1,'']],al:[],
+ note:'0/0 型的原型：约分后剩余式在 x=1 处的值（2）就是极限值。'},
+
+{id:'inv1',g:'shape',e:'y = 1/(x − 1)',tag:'无穷间断·平移',v:[-3,5,-5,5],f:function(x){return x===1?NaN:1/(x-1)},
+ dom:'x ≠ 1',rng:'y ≠ 0',asym:'x=1（垂直）· y=0（水平）',mono:'(−∞,1)↓，(1,+∞)↓',
+ pts:[[2,1,''],[0,-1,'']],al:[{t:'v',x:1},{t:'h',y:0}],
+ note:'y=1/x 向右平移 1。求渐近线只需看「分母为 0 处」和「x→∞ 时的极限」。'},
+
+{id:'hook',g:'shape',e:'y = x + 1/x',tag:'对勾函数·考最值',v:[-5,5,-6,6],f:function(x){return x===0?NaN:x+1/x},
+ dom:'x ≠ 0',rng:'(−∞,−2] ∪ [2, +∞)',asym:'x=0（垂直）· y=x（斜渐近线）',mono:'x>0：在 x=1 取极小',
+ pts:[[1,2,'极小值 2'],[-1,-2,'极大值 −2']],al:[{t:'v',x:0},{t:'d',k:1,b:0}],
+ note:'均值不等式的最值模型（x>0 时 y≥2）。注意还有斜渐近线 y=x，别漏。'},
+
+{id:'xlnx',g:'shape',e:'y = x·ln x',tag:'0·∞ 型',v:[-0.35,3.2,-0.6,2.6],f:function(x){return x<=0?NaN:x*Math.log(x)},
+ dom:'(0, +∞)',rng:'[−1/e, +∞)',asym:'无',mono:'(0, 1/e)↓，(1/e, +∞)↑',
+ pts:[[1/Math.E,-1/Math.E,'极小值 −1/e ≈ −0.368'],[1,0,'过 (1,0)']],al:[],
+ note:'lim(x→0⁺) x·lnx = 0。0·∞ 型极限的标准图像依据。'},
+
+{id:'lnxx',g:'shape',e:'y = (ln x) / x',tag:'考最大值·比较大小',v:[-0.4,9,-1.6,1],f:function(x){return x<=0?NaN:Math.log(x)/x},
+ dom:'(0, +∞)',rng:'(−∞, 1/e]',asym:'y=0（x→+∞，水平）',mono:'(0, e)↑，(e, +∞)↓',
+ pts:[[Math.E,1/Math.E,'极大值 1/e ≈ 0.368'],[1,0,'过 (1,0)']],al:[{t:'h',y:0}],
+ note:'e 附近的比较题常客（如比较 πᵉ 与 e^π 的大小，用这个函数的单调性）。'},
+
+{id:'bell',g:'shape',e:'y = 1/(1 + x²)',tag:'钟形·偶函数',v:[-5,5,-0.2,1.25],f:function(x){return 1/(1+x*x)},
+ dom:'(−∞, +∞)',rng:'(0, 1]',asym:'y=0（双侧水平）',mono:'(−∞,0)↑，(0,+∞)↓',
+ pts:[[0,1,'极大值 1'],[1,.5,''],[Math.sqrt(3),.25,'拐点']],al:[{t:'h',y:0}],
+ note:'arctan x 的导数。曲线下总面积恰好是 π，正态分布的原型。'},
+
+{id:'abs',g:'shape',e:'y = |x|',tag:'连续但不可导',v:[-3,3,-0.6,3.4],f:function(x){return Math.abs(x)},
+ dom:'(−∞, +∞)',rng:'[0, +∞)',asym:'无',mono:'(−∞,0)↓，(0,+∞)↑',
+ pts:[[0,0,'尖点·不可导'],[1,1,''],[-2,2,'']],al:[],
+ note:'x=0 处左导 −1、右导 +1，不可导。「连续 ≠ 可导」的标准图证。'},
+
+{id:'cubic',g:'shape',e:'y = x³ − 3x',tag:'三次函数模板',v:[-2.6,2.6,-5.5,5.5],f:function(x){return x*x*x-3*x},
+ dom:'(−∞, +∞)',rng:'(−∞, +∞)',asym:'无',mono:'(−∞,−1)↑，(−1,1)↓，(1,+∞)↑',
+ pts:[[-1,2,'极大值 2'],[1,-2,'极小值 −2'],[0,0,'拐点']],al:[],
+ note:'三次函数题型的模板：两个极值 + 一个拐点，看判别式定性。'},
+
+{id:'floor',g:'shape',e:'y = [x]（取整）',tag:'跳跃间断·阶梯',v:[-3.4,3.4,-3.9,3.9],f:function(x){return Math.floor(x)},
+ dom:'(−∞, +∞)',rng:'整数集 Z',asym:'无',mono:'不减（阶梯上升）',
+ pts:[[0,0,''],[1,1,'']],al:[],step:true,
+ note:'每个整数点都是第一类·跳跃间断（右极限 n，左极限 n−1）。'}
+];
+
+var G = {basic:'基本初等',trig:'三角·反三角',limit:'极限与间断',shape:'变形·复合'};
+
+function fmt(v){
+  if(!isFinite(v)) return '—';
+  if(Math.abs(v)<1e-9) return '0';
+  var s = Math.abs(v)>=1 ? v.toFixed(2) : v.toFixed(3);
+  s = s.replace(/0+$/,'').replace(/\.$/,'');
+  return s;
+}
+function gcd(a,b){return b?gcd(b,a%b):a}
+function piLabel(k){
+  if(k===0) return '0';
+  var n=k,d=2,g=gcd(Math.abs(n),d); n/=g; d/=g;
+  var num = n===1?'π':(n===-1?'−π':n+'π');
+  return d===1?num:num+'/'+d;
+}
+
+var FONT = '-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif';
+function css(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()}
+
+function draw(cv,it,hoverX){
+  var padL=30,padR=12,padT=10,padB=20;
+  var W=cv.clientWidth||330, H=172;
+  var dpr=window.devicePixelRatio||1;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+  }
+  var g=cv.getContext('2d');
+  g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,W,H);
+  if(W<60) return;
+  var vx0=it.v[0],vx1=it.v[1],vy0=it.v[2],vy1=it.v[3];
+  var iw=W-padL-padR, ih=H-padT-padB;
+  function X(x){return padL+(x-vx0)/(vx1-vx0)*iw}
+  function Y(y){return H-padB-(y-vy0)/(vy1-vy0)*ih}
+  var C={
+    grid:css('--grid')||'#eee', axis:css('--axis')||'#999', curve:css('--curve')||'#185FA5',
+    pt:css('--pt')||'#D85A30', open:css('--open')||'#D4537E', text:css('--muted')||'#666',
+    card:css('--card')||'#fff'
+  };
+
+  function step(range,target){
+    var raw=range/target, mag=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)), n=raw/mag;
+    return (n<=1?1:n<=2?2:n<=5?5:10)*mag;
+  }
+  var sx = it.pik ? Math.PI/2 : step(vx1-vx0,5);
+  var sy = step(vy1-vy0,4);
+
+  g.lineWidth=1;
+  g.strokeStyle=C.grid;
+  g.beginPath();
+  var i,k;
+  for(i=Math.ceil(vx0/sx);i*sx<=vx1;i++){var px=X(i*sx);g.moveTo(px,padT);g.lineTo(px,H-padB)}
+  for(k=Math.ceil(vy0/sy);k*sy<=vy1;k++){var py=Y(k*sy);g.moveTo(padL,py);g.lineTo(W-padR,py)}
+  g.stroke();
+
+  var ax=Y(0), ay=X(0);
+  var hasAx = vy0<=0&&0<=vy1;
+  var hasAy = vx0<=0&&0<=vx1;
+  var x0 = hasAx?ax:H-padB;
+  var y0 = hasAy?ay:padL;
+  g.strokeStyle=C.axis; g.lineWidth=1;
+  g.beginPath(); g.moveTo(padL,x0); g.lineTo(W-padR,x0); g.moveTo(y0,padT); g.lineTo(y0,H-padB); g.stroke();
+
+  g.fillStyle=C.text; g.font='11px '+FONT;
+  g.textAlign='center'; g.textBaseline='top';
+  for(i=Math.ceil(vx0/sx);i*sx<=vx1;i++){
+    if(Math.abs(i*sx)<1e-9) continue;
+    var lbl = it.pik ? piLabel(i) : fmt(Math.round(i*sx*1000)/1000);
+    g.fillText(lbl, X(i*sx), x0+4);
+  }
+  g.fillText('0', y0-4, x0+4);
+  g.textAlign='right'; g.textBaseline='middle';
+  for(k=Math.ceil(vy0/sy);k*sy<=vy1;k++){
+    if(Math.abs(k*sy)<1e-9) continue;
+    g.fillText(fmt(Math.round(k*sy*1000)/1000), y0-5, Y(k*sy));
+  }
+
+  if(it.al){
+    g.save();
+    g.setLineDash([4,4]); g.strokeStyle=C.axis; g.globalAlpha=.7;
+    it.al.forEach(function(a){
+      g.beginPath();
+      if(a.t==='v'){var px=X(a.x);g.moveTo(px,padT);g.lineTo(px,H-padB)}
+      else if(a.t==='h'){var py=Y(a.y);g.moveTo(padL,py);g.lineTo(W-padR,py)}
+      else {
+        var kk=a.k,bb=a.b;
+        g.moveTo(X(vx0),Y(kk*vx0+bb)); g.lineTo(X(vx1),Y(kk*vx1+bb));
+      }
+      g.stroke();
+    });
+    g.restore();
+  }
+
+  g.save();
+  g.beginPath(); g.rect(padL,padT,iw,ih); g.clip();
+  g.strokeStyle=C.curve; g.lineWidth=1.8; g.lineJoin='round'; g.lineCap='round';
+
+  if(it.step){
+    g.beginPath();
+    for(i=Math.floor(vx0);i<=vx1;i++){
+      var py1=Y(i);
+      g.moveTo(X(i),py1); g.lineTo(X(Math.min(i+1,vx1)),py1);
+      g.moveTo(X(i),py1); g.lineTo(X(i),Y(i-1));
+    }
+    g.stroke();
+  } else {
+    var N=1400, span=vy1-vy0;
+    var prevY=null, started=false;
+    g.beginPath();
+    for(i=0;i<=N;i++){
+      var x=vx0+(vx1-vx0)*i/N;
+      var y=it.f(x);
+      var ok=isFinite(y)&&!isNaN(y);
+      if(ok&&prevY!==null&&Math.abs(y-prevY)>span*1.2) ok=false;
+      if(!ok){started=false;prevY=null;continue}
+      var qx=X(x), qy=Y(y);
+      if(!started){g.moveTo(qx,qy);started=true} else {g.lineTo(qx,qy)}
+      prevY=y;
+    }
+    g.stroke();
+  }
+  g.restore();
+
+  if(it.pts){
+    it.pts.forEach(function(p){
+      var px=X(p[0]), py=Y(p[1]);
+      if(px<padL-2||px>W-padR+2||py<padT-2||py>H-padB+2) return;
+      g.beginPath(); g.arc(px,py,3.6,0,7);
+      if(p[3]){ g.fillStyle=C.card; g.fill(); g.strokeStyle=C.open; g.lineWidth=1.6; g.stroke(); }
+      else { g.fillStyle=C.pt; g.fill(); }
+      if(p[2]){
+        var up = py>padT+34;
+        g.font='11px '+FONT; g.textAlign='center'; g.textBaseline=up?'bottom':'top';
+        var tw=g.measureText(p[2]).width;
+        g.fillStyle=C.card;
+        g.fillRect(px-tw/2-4, up?py-21:py+5, tw+8, 15);
+        g.fillStyle=C.text;
+        g.fillText(p[2], px, up?py-8:py+7);
+      }
+    });
+  }
+
+  if(hoverX!==undefined&&hoverX!==null&&isFinite(it.f(hoverX))){
+    var hx=X(hoverX), hy=Y(it.f(hoverX));
+    g.save();
+    g.setLineDash([3,3]); g.strokeStyle=C.pt; g.globalAlpha=.6; g.lineWidth=1;
+    g.beginPath(); g.moveTo(hx,padT); g.lineTo(hx,H-padB);
+    if(hy>padT&&hy<H-padB){g.moveTo(padL,hy);g.lineTo(W-padR,hy)}
+    g.stroke();
+    g.restore();
+    if(hy>padT&&hy<H-padB){
+      g.beginPath(); g.arc(hx,hy,3.4,0,7); g.fillStyle=C.pt; g.fill();
+    }
+  }
+}
+
+function build(){
+  var grid=document.getElementById('grid');
+  F.forEach(function(it){
+    var c=document.createElement('div'); c.className='card';
+    c.dataset.g=it.g; c.dataset.key=(it.e+' '+it.tag+' '+it.note+' '+it.dom+' '+it.rng+' '+it.asym+' '+(G[it.g]||'')).toLowerCase();
+    var h='<div class="ch"><span class="expr">'+it.e+'</span><span class="tag">'+it.tag+'</span></div>';
+    h+='<div class="cvs"><canvas></canvas><span class="readout">移到图上读数</span></div>';
+    h+='<dl class="facts">';
+    h+='<div><dt>定义域</dt><dd>'+it.dom+'</dd></div>';
+    h+='<div><dt>值域</dt><dd>'+it.rng+'</dd></div>';
+    h+='<div><dt>渐近线</dt><dd>'+it.asym+'</dd></div>';
+    h+='</dl>';
+    h+='<ul class="plist">';
+    it.pts.forEach(function(p){
+      h+='<li><b>('+fmt(p[0])+', '+fmt(p[1])+')</b><span>'+(p[2]||'')+'</span></li>';
+    });
+    if(it.al&&it.al.length){
+      it.al.forEach(function(a){
+        var s = a.t==='v' ? '垂直 x = '+fmt(a.x) : a.t==='h' ? '水平 y = '+fmt(a.y) : '斜 y = '+fmt(a.k)+'x'+(a.b?(' + '+fmt(a.b)):'');
+        h+='<li><b>'+s+'</b></li>';
+      });
+    }
+    h+='</ul>';
+    h+='<p class="note">'+it.note+'</p>';
+    c.innerHTML=h;
+    grid.appendChild(c);
+
+    var cv=c.querySelector('canvas'), ro=c.querySelector('.readout');
+    cv._it=it; cv._ro=ro; cv._hx=null;
+    cv.addEventListener('mousemove',function(ev){
+      var r=cv.getBoundingClientRect();
+      var padL=30,padR=12;
+      var t=(ev.clientX-r.left-padL)/(r.width-padL-padR);
+      var x=it.v[0]+(it.v[1]-it.v[0])*t;
+      cv._hx=x;
+      var y=it.f(x);
+      ro.textContent = (isFinite(y)&&!isNaN(y)) ? '('+fmt(x)+', '+fmt(y)+')' : '('+fmt(x)+', 无定义)';
+      if(!cv._raf) cv._raf=requestAnimationFrame(function(){cv._raf=0;draw(cv,it,cv._hx)});
+    });
+    cv.addEventListener('mouseleave',function(){
+      cv._hx=null; ro.textContent='移到图上读数'; draw(cv,it,null);
+    });
+  });
+  var tb=document.querySelector('#tbl tbody');
+  F.forEach(function(it){
+    var tr=document.createElement('tr');
+    var ex=it.pts.map(function(p){return '('+fmt(p[0])+', '+fmt(p[1])+')'+(p[2]?' '+p[2]:'')}).join('；');
+    tr.innerHTML='<td>'+it.e+'</td><td>'+it.dom+'</td><td>'+it.rng+'</td><td>'+it.asym+'</td><td class="num">'+ex+'</td><td>'+it.note+'</td>';
+    tb.appendChild(tr);
+  });
+}
+
+function renderAll(){
+  document.querySelectorAll('.card').forEach(function(c){
+    var cv=c.querySelector('canvas');
+    if(cv&&cv._it&&c.offsetParent!==null) draw(cv,cv._it,cv._hx);
+  });
+}
+
+function apply(){
+  var q=document.getElementById('q').value.trim().toLowerCase();
+  var g=document.querySelector('#chips button.on').dataset.g;
+  var n=0;
+  document.querySelectorAll('.card').forEach(function(c){
+    var ok = (g==='all'||g===c.dataset.g) && (!q||c.dataset.key.indexOf(q)>=0);
+    c.style.display = ok?'flex':'none';
+    if(ok) n++;
+  });
+  document.querySelectorAll('#tbl tbody tr').forEach(function(tr,i){
+    var it=F[i], s=(it.e+' '+it.note+' '+it.tag+' '+(G[it.g]||'')).toLowerCase();
+    tr.style.display = ((g==='all'||g===it.g)&&(!q||s.indexOf(q)>=0))?'':'none';
+  });
+  var old=document.querySelector('.empty');
+  if(old) old.remove();
+  if(n===0){
+    var d=document.createElement('div'); d.className='empty'; d.textContent='没有匹配的函数，换个关键词试试';
+    document.getElementById('grid').appendChild(d);
+  }
+}
+
+build();
+renderAll();
+document.getElementById('q').addEventListener('input',apply);
+document.querySelectorAll('#chips button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#chips button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var isTbl = b.dataset.g==='table';
+    document.getElementById('grid').style.display = isTbl?'none':'grid';
+    document.getElementById('tblwrap').style.display = isTbl?'block':'none';
+    if(!isTbl) setTimeout(renderAll,20);
+  });
+});
+window.addEventListener('resize',function(){
+  clearTimeout(window._rt); window._rt=setTimeout(renderAll,120);
+});
+</script>
+</body>
+</html>
