@@ -9,3 +9,6 @@ Desktop.ini
 # 工具探测用临时文件
 _probe.txt
 _tree.txt
+
+# AI 助手的本地工作数据（记忆/缓存），不随公开仓库同步
+.workbuddy/
