@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>函数特殊值 · 变换速查手册</title>
+<style>
+:root{
+  --bg:#fbfbf9; --card:#ffffff; --line:#e5e4df; --text:#17171a; --muted:#6d6d73;
+  --accent:#185FA5; --warn:#993C1D; --chip:#f2f1ec; --chipon:#0C447C;
+  --hl:#EAF3DE; --hltext:#3B6D11;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#191919; --card:#232325; --line:#343437; --text:#ececef; --muted:#9c9ca3;
+    --accent:#85B7EB; --warn:#F0997B; --chip:#2b2b2e; --chipon:#B5D4F4;
+    --hl:#26331a; --hltext:#97C459;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 20px 70px;background:var(--bg);color:var(--text);
+  font-family:-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:14px;line-height:1.65}
+.wrap{max-width:1060px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{padding:7px 14px;font-size:13px;border:1px solid var(--line);background:var(--card);
+  color:var(--text);border-radius:999px;cursor:pointer;font-family:inherit}
+.chips button.on{background:var(--chipon);border-color:var(--chipon);color:#fff}
+@media (prefers-color-scheme: dark){.chips button.on{color:#0b0b0c}}
+.toggle{padding:7px 14px;font-size:13px;border:1px solid var(--line);background:var(--card);
+  color:var(--text);border-radius:999px;cursor:pointer;font-family:inherit}
+.toggle.on{background:var(--hl);border-color:var(--hltext);color:var(--hltext)}
+.pane{display:none}
+.pane.on{display:block}
+h2{font-size:16px;font-weight:500;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h2:first-child{margin-top:4px}
+h3{font-size:14px;font-weight:500;margin:18px 0 8px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.tw{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:center;white-space:nowrap}
+th{background:var(--chip);font-weight:500}
+td.l,th.l{text-align:left;white-space:normal}
+.f{font-family:"Cambria Math","Times New Roman",Georgia,serif;font-size:14px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:var(--chip);padding:1px 5px;border-radius:4px}
+body.hide .ans{color:transparent!important;background:var(--chip);border-radius:3px}
+body.hide .ans:hover{color:inherit!important;background:transparent}
+.legend{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.tip{background:var(--hl);color:var(--hltext);border-radius:8px;padding:10px 14px;font-size:13px;margin:12px 0}
+.tip b{font-weight:500}
+.warn{background:#FCEBEB;color:#791F1F;border-radius:8px;padding:10px 14px;font-size:13px;margin:12px 0}
+@media (prefers-color-scheme: dark){.warn{background:#3a1f1f;color:#F7C1C1}}
+.wr{overflow:auto}
+ul.tight{margin:6px 0;padding-left:20px}
+ul.tight li{margin:3px 0}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;background:var(--chip);color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+@media print{
+  body{background:#fff;padding:0}
+  .bar{display:none}
+  .pane{display:block!important}
+  body.hide .ans{color:inherit!important;background:transparent}
+  table{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>函数特殊值 · 变换速查手册</h1>
+<p class="sub">数二常用：三角特殊值、反三角函数、指数对数、代数变换与极限套路。点右上「自测模式」可把所有答案遮住，鼠标划过才显示。</p>
+
+<div class="bar">
+  <div class="chips" id="tabs">
+    <button data-t="t1" class="on">三角特殊值</button>
+    <button data-t="t2">反三角函数</button>
+    <button data-t="t3">指数与对数</button>
+    <button data-t="t4">变换与极限套路</button>
+  </div>
+  <button id="blurbtn" class="toggle">自测模式：关</button>
+</div>
+
+<section id="t1" class="pane on">
+<h2>一、单位圆：所有特殊值的老家</h2>
+<div class="card">
+<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+<svg viewBox="0 0 280 280" style="width:270px;flex:0 0 auto" role="img" aria-label="单位圆与特殊角">
+<circle cx="140" cy="140" r="100" fill="none" stroke="#D3D1C7" stroke-width="1"/>
+<line x1="30" y1="140" x2="250" y2="140" stroke="#B4B2A9" stroke-width="1"/>
+<line x1="140" y1="30" x2="140" y2="250" stroke="#B4B2A9" stroke-width="1"/>
+<text x="256" y="145" font-size="11" fill="#6d6d73" text-anchor="middle">x</text>
+<text x="140" y="24" font-size="11" fill="#6d6d73" text-anchor="middle">y</text>
+<polygon id="u-fan" fill="#B5D4F4" opacity="0.45" points="140,140 240,140 240,140"/>
+<line id="u-ray" x1="140" y1="140" x2="240" y2="140" stroke="#185FA5" stroke-width="1.5"/>
+<g id="u-dots"></g>
+<line id="u-vline" x1="240" y1="140" x2="240" y2="140" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3"/>
+<line id="u-hline" x1="140" y1="140" x2="240" y2="140" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3"/>
+<circle id="u-pt" cx="240" cy="140" r="5" fill="#D85A30"/>
+</svg>
+<div style="flex:1;min-width:230px">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px" id="u-btns"></div>
+  <div style="background:var(--chip);border-radius:10px;padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+      <span id="u-deg" style="font-size:20px;font-weight:500">30°</span>
+      <span id="u-rad" style="font-size:13px;color:var(--muted)">π/6</span>
+    </div>
+    <table style="border:0;background:transparent">
+      <tr><td style="border:0;text-align:left;color:var(--muted);padding:3px 0">sin</td><td id="u-sin" class="ans" style="border:0;text-align:right;font-weight:500">1/2</td><td id="u-sinn" style="border:0;text-align:right;color:var(--muted);font-size:12px">0.5</td></tr>
+      <tr><td style="border:0;text-align:left;color:var(--muted);padding:3px 0">cos</td><td id="u-cos" class="ans" style="border:0;text-align:right;font-weight:500">√3/2</td><td id="u-cosn" style="border:0;text-align:right;color:var(--muted);font-size:12px">0.866</td></tr>
+      <tr><td style="border:0;text-align:left;color:var(--muted);padding:3px 0">tan</td><td id="u-tan" class="ans" style="border:0;text-align:right;font-weight:500">√3/3</td><td id="u-tann" style="border:0;text-align:right;color:var(--muted);font-size:12px">0.577</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+<p class="legend">点圆上的点或下面的按钮切换角度。横坐标就是 cos，纵坐标就是 sin —— 这就是单位圆的全部秘密。</p>
+</div>
+
+<h2>二、特殊角函数值总表</h2>
+<div class="tw"><table>
+<tr><th class="l">x</th><th>0</th><th>π/6</th><th>π/4</th><th>π/3</th><th>π/2</th><th>2π/3</th><th>3π/4</th><th>5π/6</th><th>π</th><th>7π/6</th><th>5π/4</th><th>4π/3</th><th>3π/2</th><th>5π/3</th><th>7π/4</th><th>11π/6</th></tr>
+<tr><th class="l">sin x</th><td class="ans">0</td><td class="ans">1/2</td><td class="ans">√2/2</td><td class="ans">√3/2</td><td class="ans">1</td><td class="ans">√3/2</td><td class="ans">√2/2</td><td class="ans">1/2</td><td class="ans">0</td><td class="ans">−1/2</td><td class="ans">−√2/2</td><td class="ans">−√3/2</td><td class="ans">−1</td><td class="ans">−√3/2</td><td class="ans">−√2/2</td><td class="ans">−1/2</td></tr>
+<tr><th class="l">cos x</th><td class="ans">1</td><td class="ans">√3/2</td><td class="ans">√2/2</td><td class="ans">1/2</td><td class="ans">0</td><td class="ans">−1/2</td><td class="ans">−√2/2</td><td class="ans">−√3/2</td><td class="ans">−1</td><td class="ans">−√3/2</td><td class="ans">−√2/2</td><td class="ans">−1/2</td><td class="ans">0</td><td class="ans">1/2</td><td class="ans">√2/2</td><td class="ans">√3/2</td></tr>
+<tr><th class="l">tan x</th><td class="ans">0</td><td class="ans">√3/3</td><td class="ans">1</td><td class="ans">√3</td><td class="ans">不存在</td><td class="ans">−√3</td><td class="ans">−1</td><td class="ans">−√3/3</td><td class="ans">0</td><td class="ans">√3/3</td><td class="ans">1</td><td class="ans">√3</td><td class="ans">不存在</td><td class="ans">−√3</td><td class="ans">−1</td><td class="ans">−√3/3</td></tr>
+</table></div>
+<div class="tip"><b>只需背第一象限 5 个角。</b>sin 的值是 <span class="f">√0/2、√1/2、√2/2、√3/2、√4/2</span>（即 0、1/2、√2/2、√3/2、1）；cos 倒着数。其余靠诱导公式：<b>奇变偶不变，符号看象限</b>。</div>
+
+<h2>三、三角恒等式</h2>
+<div class="tw"><table>
+<tr><th class="l">类别</th><th class="l">公式</th><th class="l">什么时候用</th></tr>
+<tr><td class="l">平方关系</td><td class="l f ans">sin²x + cos²x = 1　　1 + tan²x = sec²x</td><td class="l">化简根号、凑平方</td></tr>
+<tr><td class="l">诱导公式</td><td class="l f ans">sin(π − x) = sin x　　cos(π − x) = −cos x<br>sin(π/2 − x) = cos x　　cos(π/2 − x) = sin x<br>sin(−x) = −sin x　　cos(−x) = cos x</td><td class="l">把任意角化到第一象限</td></tr>
+<tr><td class="l">和差角</td><td class="l f ans">sin(x ± y) = sin x cos y ± cos x sin y<br>cos(x ± y) = cos x cos y ∓ sin x sin y<br>tan(x ± y) = (tan x ± tan y) / (1 ∓ tan x·tan y)</td><td class="l">拆角、凑角</td></tr>
+<tr><td class="l">二倍角</td><td class="l f ans">sin 2x = 2 sin x cos x<br>cos 2x = cos²x − sin²x = 1 − 2sin²x = 2cos²x − 1</td><td class="l">降次、化简</td></tr>
+<tr><td class="l"><b>降幂</b></td><td class="l f ans">sin²x = (1 − cos 2x) / 2<br>cos²x = (1 + cos 2x) / 2</td><td class="l">积分必用（把平方降成一次）</td></tr>
+<tr><td class="l">半角</td><td class="l f ans">tan(x/2) = sin x / (1 + cos x) = (1 − cos x) / sin x</td><td class="l">凑 tan(x/2) 换元</td></tr>
+<tr><td class="l">和差化积</td><td class="l f ans">sin A + sin B = 2 sin((A+B)/2) cos((A−B)/2)<br>sin A − sin B = 2 cos((A+B)/2) sin((A−B)/2)<br>cos A + cos B = 2 cos((A+B)/2) cos((A−B)/2)<br>cos A − cos B = −2 sin((A+B)/2) sin((A−B)/2)</td><td class="l">分子出现同频差时，把差变成积</td></tr>
+<tr><td class="l">积化和差</td><td class="l f ans">sin x cos y = ½[sin(x+y) + sin(x−y)]<br>cos x cos y = ½[cos(x+y) + cos(x−y)]<br>sin x sin y = ½[cos(x−y) − cos(x+y)]</td><td class="l">积分里把乘积拆成和</td></tr>
+<tr><td class="l">万能代换</td><td class="l f ans">t = tan(x/2) ⟹ sin x = 2t/(1+t²)，cos x = (1−t²)/(1+t²)，dx = 2dt/(1+t²)</td><td class="l">有理函数化（三角积分兜底手段）</td></tr>
+</table></div>
+</section>
+
+<section id="t2" class="pane">
+<h2>一、四个反三角函数的「住处」</h2>
+<div class="tw"><table>
+<tr><th class="l">函数</th><th>定义域</th><th>值域（必须背）</th><th>奇偶性</th><th>单调性</th><th>导数</th></tr>
+<tr><td class="l f">arcsin x</td><td>[−1, 1]</td><td class="ans">[−π/2, π/2]　<b>闭</b></td><td>奇函数</td><td>递增</td><td class="ans f">1/√(1 − x²)</td></tr>
+<tr><td class="l f">arccos x</td><td>[−1, 1]</td><td class="ans">[0, π]　<b>闭</b></td><td>非奇非偶</td><td>递减</td><td class="ans f">−1/√(1 − x²)</td></tr>
+<tr><td class="l f">arctan x</td><td>(−∞, +∞)</td><td class="ans">(−π/2, π/2)　<b>开</b></td><td>奇函数</td><td>递增</td><td class="ans f">1/(1 + x²)</td></tr>
+<tr><td class="l f">arccot x</td><td>(−∞, +∞)</td><td class="ans">(0, π)　<b>开</b></td><td>非奇非偶</td><td>递减</td><td class="ans f">−1/(1 + x²)</td></tr>
+</table></div>
+<div class="warn"><b>关键区别：</b>arcsin / arccos 的端点<b>取得到</b>；arctan / arccot 的端点 <b>±π/2 和 0、π 永远取不到</b>。所以写的是 <span class="f">lim(x→+∞) arctan x = π/2</span>，而<b>绝不能</b>写 <span class="f">arctan(+∞) = π/2</span>。</div>
+
+<h2>二、反三角函数特殊值</h2>
+<h3>arcsin 与 arccos（定义域 [−1, 1]）</h3>
+<div class="tw"><table>
+<tr><th class="l">x</th><th>−1</th><th>−√3/2</th><th>−√2/2</th><th>−1/2</th><th>0</th><th>1/2</th><th>√2/2</th><th>√3/2</th><th>1</th></tr>
+<tr><th class="l">arcsin x</th><td class="ans">−π/2</td><td class="ans">−π/3</td><td class="ans">−π/4</td><td class="ans">−π/6</td><td class="ans">0</td><td class="ans">π/6</td><td class="ans">π/4</td><td class="ans">π/3</td><td class="ans">π/2</td></tr>
+<tr><th class="l">arccos x</th><td class="ans">π</td><td class="ans">5π/6</td><td class="ans">3π/4</td><td class="ans">2π/3</td><td class="ans">π/2</td><td class="ans">π/3</td><td class="ans">π/4</td><td class="ans">π/6</td><td class="ans">0</td></tr>
+</table></div>
+<h3>arctan 与 arccot（定义域 ℝ）</h3>
+<div class="tw"><table>
+<tr><th class="l">x</th><th>−√3</th><th>−1</th><th>−√3/3</th><th>0</th><th>√3/3</th><th>1</th><th>√3</th></tr>
+<tr><th class="l">arctan x</th><td class="ans">−π/3</td><td class="ans">−π/4</td><td class="ans">−π/6</td><td class="ans">0</td><td class="ans">π/6</td><td class="ans">π/4</td><td class="ans">π/3</td></tr>
+<tr><th class="l">arccot x</th><td class="ans">5π/6</td><td class="ans">3π/4</td><td class="ans">2π/3</td><td class="ans">π/2</td><td class="ans">π/3</td><td class="ans">π/4</td><td class="ans">π/6</td></tr>
+</table></div>
+<div class="tip"><b>背法：</b>这两张表都是单位圆特殊角「倒过来看」。记住 <span class="f">tan(π/6) = √3/3、tan(π/4) = 1、tan(π/3) = √3</span> 就够；arcsin 和 arccos <b>同一列的答案加起来恒等于 π/2</b>。</div>
+
+<h2>三、必背恒等式</h2>
+<div class="tw"><table>
+<tr><th class="l">恒等式</th><th class="l">适用范围 / 陷阱</th></tr>
+<tr><td class="l f ans">arcsin x + arccos x = π/2</td><td class="l">x ∈ [−1, 1]</td></tr>
+<tr><td class="l f ans">arctan x + arccot x = π/2</td><td class="l">x ∈ ℝ</td></tr>
+<tr><td class="l f ans">arctan x + arctan(1/x) = π/2　(x &gt; 0)<br>arctan x + arctan(1/x) = −π/2　(x &lt; 0)</td><td class="l"><b>最容易丢分</b>：正负号必须按 x 的符号分情况，不能只写 π/2</td></tr>
+<tr><td class="l f ans">arccos(−x) = π − arccos x<br>arcsin(−x) = −arcsin x　　arctan(−x) = −arctan x</td><td class="l">arccos 不是奇函数，别写成 −arccos x</td></tr>
+<tr><td class="l f ans">arctan x ± arctan y = arctan[(x ± y)/(1 ∓ xy)]</td><td class="l">只在<b>结果落在 (−π/2, π/2) 内</b>时成立，否则要 ±π 修正</td></tr>
+<tr><td class="l f ans">2 arctan x = arctan[2x/(1 − x²)]</td><td class="l">|x| &lt; 1 时成立</td></tr>
+</table></div>
+
+<h2>四、反三角函数相关的极限</h2>
+<div class="tw"><table>
+<tr><th class="l">极限</th><th class="l">结果</th></tr>
+<tr><td class="l f">lim(x→+∞) arctan x</td><td class="l ans f">π/2</td></tr>
+<tr><td class="l f">lim(x→−∞) arctan x</td><td class="l ans f">−π/2（不是 π/2！）</td></tr>
+<tr><td class="l f">lim(x→0) arctan x / x</td><td class="l ans f">1（等价无穷小 arctan x ~ x）</td></tr>
+<tr><td class="l f">lim(x→0) arcsin x / x</td><td class="l ans f">1（arcsin x ~ x）</td></tr>
+<tr><td class="l f">lim(x→+∞) arctan(1/x)</td><td class="l ans f">0　（x→0⁺ 时才是 π/2）</td></tr>
+</table></div>
+</section>
+
+<section id="t3" class="pane">
+<h2>一、指数与对数运算律</h2>
+<div class="tw"><table>
+<tr><th class="l">类别</th><th class="l">公式</th><th class="l">用途</th></tr>
+<tr><td class="l">指数</td><td class="l f ans">aᵐ·aⁿ = aᵐ⁺ⁿ　　aᵐ/aⁿ = aᵐ⁻ⁿ<br>(aᵐ)ⁿ = aᵐⁿ　　a⁻ⁿ = 1/aⁿ　　a⁰ = 1</td><td class="l">合并、拆分幂</td></tr>
+<tr><td class="l">对数</td><td class="l f ans">ln(ab) = ln a + ln b<br>ln(a/b) = ln a − ln b<br>ln(aⁿ) = n ln a</td><td class="l">把乘除变加减、把指数拉下来</td></tr>
+<tr><td class="l"><b>换底</b></td><td class="l f ans">logₐb = ln b / ln a</td><td class="l">统一到底数 e</td></tr>
+<tr><td class="l"><b>互逆</b></td><td class="l f ans">ln(eˣ) = x　　e^(ln x) = x　(x &gt; 0)<br>a^(logₐb) = b</td><td class="l">消掉 e 和 ln</td></tr>
+<tr><td class="l"><b>化底数为 e</b></td><td class="l f ans">aˣ = e^(x·ln a)</td><td class="l"><b>求导、积分遇到 aˣ 必用这一步</b></td></tr>
+<tr><td class="l">对数求导法</td><td class="l f ans">y = u^v ⟹ ln y = v·ln u，再两边求导</td><td class="l">处理 x^x、(sin x)^x 这类</td></tr>
+</table></div>
+
+<h2>二、特殊值与常用近似</h2>
+<div class="grid2">
+<div><div class="tw"><table>
+<tr><th class="l">表达式</th><th>值</th></tr>
+<tr><td class="l f">ln 1</td><td class="ans">0</td></tr>
+<tr><td class="l f">ln e</td><td class="ans">1</td></tr>
+<tr><td class="l f">ln eⁿ</td><td class="ans">n</td></tr>
+<tr><td class="l f">logₐ1</td><td class="ans">0</td></tr>
+<tr><td class="l f">logₐa</td><td class="ans">1</td></tr>
+<tr><td class="l f">e⁰</td><td class="ans">1</td></tr>
+<tr><td class="l f">ln(1/x)</td><td class="ans">−ln x</td></tr>
+</table></div></div>
+<div><div class="tw"><table>
+<tr><th class="l">常数</th><th>近似值</th></tr>
+<tr><td class="l f">e</td><td class="ans">2.71828</td></tr>
+<tr><td class="l f">e²</td><td class="ans">7.389</td></tr>
+<tr><td class="l f">√e</td><td class="ans">1.649</td></tr>
+<tr><td class="l f">1/e</td><td class="ans">0.368</td></tr>
+<tr><td class="l f">ln 2</td><td class="ans">0.693</td></tr>
+<tr><td class="l f">ln 3</td><td class="ans">1.099</td></tr>
+<tr><td class="l f">ln 10</td><td class="ans">2.303</td></tr>
+</table></div></div>
+</div>
+
+<h2>三、增长阶（x → +∞ 时谁跑得快）</h2>
+<div class="card" style="text-align:center">
+<p class="f" style="font-size:16px;margin:4px 0">ln x　≪　x^a (a &gt; 0)　≪　aˣ (a &gt; 1)　≪　xˣ</p>
+<p class="legend" style="margin-top:10px">例：<span class="f">lim(x→+∞) (ln x)/x = 0</span>，<span class="f">lim(x→+∞) x/eˣ = 0</span>。分子跑得慢就是 0，跑得快就是 ∞。</p>
+</div>
+<div class="warn"><b>常用结论：</b><span class="f">lim(x→+∞) xⁿ/eˣ = 0</span>（任何 n）、<span class="f">lim(x→0⁺) x·ln x = 0</span>、<span class="f">lim(x→+∞) (ln x)/x^a = 0</span>。这三条在 ∞/∞ 型里能直接省掉洛必达。</div>
+</section>
+
+<section id="t4" class="pane">
+<h2>一、代数变换四板斧</h2>
+<div class="tw"><table>
+<tr><th class="l">板斧</th><th class="l">怎么做</th><th class="l">治什么</th></tr>
+<tr><td class="l"><b>有理化</b></td><td class="l f ans">√a − √b = (a − b)/(√a + √b)<br>(分子分母同乘共轭式)</td><td class="l">带根号的 0/0 型、∞ − ∞ 型</td></tr>
+<tr><td class="l"><b>因式分解</b></td><td class="l f ans">x² − a² = (x − a)(x + a)<br>x³ − a³ = (x − a)(x² + ax + a²)<br>x³ + a³ = (x + a)(x² − ax + a²)<br>xⁿ − aⁿ = (x − a)(xⁿ⁻¹ + xⁿ⁻²a + … + aⁿ⁻¹)</td><td class="l">0/0 型，约掉零因子</td></tr>
+<tr><td class="l"><b>通分</b></td><td class="l f ans">1/a − 1/b = (b − a)/(ab)</td><td class="l">∞ − ∞ 型（分式相减）</td></tr>
+<tr><td class="l"><b>提取最大项</b></td><td class="l f ans">x² + 3x = x²(1 + 3/x)</td><td class="l">∞/∞ 型，上下同除最高次幂</td></tr>
+<tr><td class="l"><b>换元倒代</b></td><td class="l f ans">令 t = 1/x，则 x→∞ ⟺ t→0</td><td class="l">把 x→∞ 的题变回 x→0</td></tr>
+</table></div>
+
+<h2>二、等价无穷小（x → 0）</h2>
+<div class="tw"><table>
+<tr><th class="l">函数</th><th class="l">等价形式</th><th class="l">函数</th><th class="l">等价形式</th></tr>
+<tr><td class="l f">sin x, tan x, arcsin x, arctan x</td><td class="l f ans">~ x</td><td class="l f">1 − cos x</td><td class="l f ans">~ x²/2</td></tr>
+<tr><td class="l f">ln(1 + x)</td><td class="l f ans">~ x</td><td class="l f">(1 + x)ᵃ − 1</td><td class="l f ans">~ ax</td></tr>
+<tr><td class="l f">eˣ − 1</td><td class="l f ans">~ x</td><td class="l f">aˣ − 1</td><td class="l f ans">~ x·ln a</td></tr>
+<tr><td class="l f">x − sin x</td><td class="l f ans">~ x³/6</td><td class="l f">tan x − x</td><td class="l f ans">~ x³/3</td></tr>
+<tr><td class="l f">x − ln(1 + x)</td><td class="l f ans">~ x²/2</td><td class="l f">arcsin x − x</td><td class="l f ans">~ x³/6</td></tr>
+</table></div>
+<div class="warn"><b>使用红线：</b>等价替换只对<b>乘除因子</b>安全。加减项里直接替换会出错——除非分子或分母整体替换、或配合泰勒展开精确到同阶。</div>
+
+<h2>三、极限计算固定顺序</h2>
+<div class="card">
+<ul class="tight">
+<li><b>① 先代入</b> —— 是定式就直接出答案；是未定式才继续。这一步最容易被跳过，也最容易白算。</li>
+<li><b>② 能约就约、能有理化就有理化</b> —— 处理 0/0 型。</li>
+<li><b>③ 通分 / 提取最大项</b> —— 处理 ∞ − ∞、∞/∞ 型。</li>
+<li><b>④ 等价无穷小替换</b> —— 只替换乘除因子，能一秒出答案就别上洛必达。</li>
+<li><b>⑤ 洛必达</b> —— 只对 0/0 和 ∞/∞ 用；用之前先确认是这两种型。</li>
+<li><b>⑥ 泰勒展开</b> —— 前面都不行时的终极手段，展开到「分子分母最低次幂相同」为止。</li>
+</ul>
+</div>
+
+<h2>四、七种未定式与处理手法</h2>
+<div class="tw"><table>
+<tr><th class="l">型</th><th class="l">典型样子</th><th class="l">怎么处理</th></tr>
+<tr><td class="l f">0/0</td><td class="l f">sin x / x</td><td class="l">约分、有理化、等价替换、洛必达、泰勒</td></tr>
+<tr><td class="l f">∞/∞</td><td class="l f">eˣ / x²</td><td class="l">上下同除最高次幂；或洛必达；或比增长阶</td></tr>
+<tr><td class="l f">0 · ∞</td><td class="l f">x·ln x（x→0⁺）</td><td class="l">改写成 <span class="f">0/(1/∞)</span> 或 <span class="f">∞/(1/0)</span>，转成 0/0 或 ∞/∞</td></tr>
+<tr><td class="l f">∞ − ∞</td><td class="l f">√(x²+x) − x</td><td class="l">通分 或 有理化 或 提取最大项</td></tr>
+<tr><td class="l f">1^∞</td><td class="l f">(1 + 1/x)ˣ</td><td class="l">套 <span class="f">lim(1+u)^v = e^(lim u·v)</span></td></tr>
+<tr><td class="l f">0⁰</td><td class="l f">xˣ（x→0⁺）</td><td class="l">取对数 <span class="f">y = e^(x·ln x)</span>，转 0·∞</td></tr>
+<tr><td class="l f">∞⁰</td><td class="l f">x^(1/x)</td><td class="l">同上，取对数转 ∞/∞ 或 0·∞</td></tr>
+</table></div>
+<div class="tip"><b>一句话记法：</b>幂指型的三种未定式（1^∞、0⁰、∞⁰）统统「<b>取对数 → 指数提到前面 → 变成 0·∞</b>」，然后通分或改写，路子完全一样。</div>
+</section>
+</div>
+
+<script>
+var A=[
+{d:0,r:'0',s:'0',c:'1',t:'0',sn:'0',cn:'1',tn:'0'},
+{d:30,r:'π/6',s:'1/2',c:'√3/2',t:'√3/3',sn:'0.5',cn:'0.866',tn:'0.577'},
+{d:45,r:'π/4',s:'√2/2',c:'√2/2',t:'1',sn:'0.707',cn:'0.707',tn:'1'},
+{d:60,r:'π/3',s:'√3/2',c:'1/2',t:'√3',sn:'0.866',cn:'0.5',tn:'1.732'},
+{d:90,r:'π/2',s:'1',c:'0',t:'不存在',sn:'1',cn:'0',tn:'—'},
+{d:120,r:'2π/3',s:'√3/2',c:'−1/2',t:'−√3',sn:'0.866',cn:'−0.5',tn:'−1.732'},
+{d:135,r:'3π/4',s:'√2/2',c:'−√2/2',t:'−1',sn:'0.707',cn:'−0.707',tn:'−1'},
+{d:150,r:'5π/6',s:'1/2',c:'−√3/2',t:'−√3/3',sn:'0.5',cn:'−0.866',tn:'−0.577'},
+{d:180,r:'π',s:'0',c:'−1',t:'0',sn:'0',cn:'−1',tn:'0'},
+{d:210,r:'7π/6',s:'−1/2',c:'−√3/2',t:'√3/3',sn:'−0.5',cn:'−0.866',tn:'0.577'},
+{d:225,r:'5π/4',s:'−√2/2',c:'−√2/2',t:'1',sn:'−0.707',cn:'−0.707',tn:'1'},
+{d:240,r:'4π/3',s:'−√3/2',c:'−1/2',t:'√3',sn:'−0.866',cn:'−0.5',tn:'1.732'},
+{d:270,r:'3π/2',s:'−1',c:'0',t:'不存在',sn:'−1',cn:'0',tn:'—'},
+{d:300,r:'5π/3',s:'−√3/2',c:'1/2',t:'−√3',sn:'−0.866',cn:'0.5',tn:'−1.732'},
+{d:315,r:'7π/4',s:'−√2/2',c:'√2/2',t:'−1',sn:'−0.707',cn:'0.707',tn:'−1'},
+{d:330,r:'11π/6',s:'−1/2',c:'√3/2',t:'−√3/3',sn:'−0.5',cn:'0.866',tn:'−0.577'}
+];
+(function(){
+var dots=document.getElementById('u-dots'), btns=document.getElementById('u-btns');
+var fan=document.getElementById('u-fan'), ray=document.getElementById('u-ray');
+var vl=document.getElementById('u-vline'), hl=document.getElementById('u-hline'), pt=document.getElementById('u-pt');
+function pos(deg,r){var a=deg*Math.PI/180;return [140+r*Math.cos(a),140-r*Math.sin(a)]}
+A.forEach(function(o,i){
+  var p=pos(o.d,100);
+  var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.style.cursor='pointer';
+  var hit=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  hit.setAttribute('cx',p[0]);hit.setAttribute('cy',p[1]);hit.setAttribute('r','11');
+  hit.setAttribute('fill','transparent');
+  var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r','3.5');
+  c.setAttribute('fill','#185FA5');
+  var lp=pos(o.d,120);
+  var tx=document.createElementNS('http://www.w3.org/2000/svg','text');
+  tx.setAttribute('x',lp[0]);tx.setAttribute('y',lp[1]);tx.setAttribute('text-anchor','middle');
+  tx.setAttribute('dominant-baseline','central');tx.setAttribute('font-size','10');
+  tx.setAttribute('fill','#6d6d73');tx.textContent=o.d+'°';
+  g.appendChild(hit);g.appendChild(c);g.appendChild(tx);
+  g.addEventListener('click',function(){pick(i)});
+  dots.appendChild(g);
+  var b=document.createElement('button');
+  b.textContent=o.d+'°'; b.style.cssText='font-size:12px;padding:4px 9px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:6px;cursor:pointer;font-family:inherit';
+  b.addEventListener('click',function(){pick(i)});
+  btns.appendChild(b);
+});
+function pick(i){
+  var o=A[i];
+  document.getElementById('u-deg').textContent=o.d+'°';
+  document.getElementById('u-rad').textContent=o.r;
+  document.getElementById('u-sin').textContent=o.s;
+  document.getElementById('u-cos').textContent=o.c;
+  document.getElementById('u-tan').textContent=o.t;
+  document.getElementById('u-sinn').textContent=o.sn;
+  document.getElementById('u-cosn').textContent=o.cn;
+  document.getElementById('u-tann').textContent=o.tn;
+  var p=pos(o.d,100);
+  ray.setAttribute('x2',p[0]); ray.setAttribute('y2',p[1]);
+  vl.setAttribute('x1',p[0]); vl.setAttribute('x2',p[0]); vl.setAttribute('y2',p[1]);
+  hl.setAttribute('y1',p[1]); hl.setAttribute('y2',p[1]); hl.setAttribute('x2',p[0]);
+  var vert = (o.d%180===90);
+  hl.setAttribute('stroke',vert?'transparent':'#D85A30');
+  vl.setAttribute('stroke',vert?'transparent':'#D85A30');
+  pt.setAttribute('cx',p[0]); pt.setAttribute('cy',p[1]);
+  fan.setAttribute('points','140,140 240,140 '+p[0]+','+p[1]);
+  Array.prototype.forEach.call(btns.children,function(b,k){
+    b.style.background = k===i?'var(--chipon)':'var(--card)';
+    b.style.color = k===i?'#fff':'var(--text)';
+    b.style.borderColor = k===i?'var(--chipon)':'var(--line)';
+  });
+}
+pick(1);
+})();
+
+(function(){
+var tabs=document.getElementById('tabs');
+tabs.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  Array.prototype.forEach.call(tabs.children,function(x){x.classList.remove('on')});
+  b.classList.add('on');
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on')});
+  var t=document.getElementById(b.dataset.t); if(t) t.classList.add('on');
+});
+var bb=document.getElementById('blurbtn');
+bb.addEventListener('click',function(){
+  var on=document.body.classList.toggle('hide');
+  bb.classList.toggle('on',on);
+  bb.textContent='自测模式：'+(on?'开':'关');
+});
+})();
+</script>
+</body>
+</html>
