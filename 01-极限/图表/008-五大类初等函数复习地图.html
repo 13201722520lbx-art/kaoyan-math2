@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>五大类初等函数 · 快速回忆复习地图</title>
+<style>
+:root{
+  --bg-page:#faf9f6; --bg-2:#f5f4f0; --bg-3:#eeece6;
+  --text-1:#1c1c1a; --text-2:#5f5e5a; --text-3:#8a8880;
+  --line:rgba(0,0,0,.12);
+  --grid:rgba(0,0,0,.07);
+  --axis:#b4b2a9;
+  --c1:#185FA5; --c2:#D85A30; --c3:#3B6D11; --c4:#993556; --c5:#534AB7;
+  --pt:#BA7517; --ghost:#c9c7bf;
+  --ok:#3B6D11; --warn:#A32D2D;
+  --font-mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-page:#17171a; --bg-2:#232327; --bg-3:#2b2b30;
+    --text-1:#f0efe9; --text-2:#b3b1a8; --text-3:#85837c;
+    --line:rgba(255,255,255,.14);
+    --grid:rgba(255,255,255,.08);
+    --axis:#6b6a64;
+    --c1:#85B7EB; --c2:#F0997B; --c3:#97C459; --c4:#ED93B1; --c5:#AFA9EC;
+    --pt:#FAC775; --ghost:#5a5952;
+    --ok:#97C459; --warn:#F09595;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;padding:26px 20px 70px;background:var(--bg-page);color:var(--text-1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.7}
+main{max-width:900px;margin:0 auto}
+h1{font-size:20px;font-weight:600;margin:0 0 8px}
+h2{font-size:15px;font-weight:600;margin:30px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--line)}
+h3{font-size:13.5px;font-weight:600;margin:18px 0 6px}
+p{font-size:14px;margin:8px 0}
+.lead{color:var(--text-2)}
+code{font-family:var(--font-mono);font-size:12.5px;background:var(--bg-2);padding:1px 5px;border-radius:4px}
+.tabs{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 4px}
+.tb{font-size:12.5px;padding:7px 13px;border-radius:9px;border:0.5px solid var(--line);
+  background:var(--bg-2);color:var(--text-2);cursor:pointer;line-height:1.3;transition:none}
+.tb:hover{border-color:var(--text-3)}
+.tb[aria-pressed="true"]{background:var(--text-1);color:var(--bg-page);border-color:var(--text-1);font-weight:600}
+.panel{display:none}
+.panel.on{display:block}
+canvas{width:100%;display:block;background:var(--bg-2);border-radius:10px;border:0.5px solid var(--line);margin-top:12px}
+#cvTrig{height:340px}
+#cvPow,#cvExp,#cvLog,#cvInv,#cvTf{height:300px}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:14px 0 0;font-size:13px;color:var(--text-2)}
+.ctl input[type=range]{flex:1;min-width:150px;accent-color:#BA7517}
+.ctl b{font-family:var(--font-mono);color:var(--text-1);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0}
+.cb{font-family:var(--font-mono);font-size:12px;padding:5px 11px;border-radius:999px;border:0.5px solid var(--line);
+  background:transparent;color:var(--text-1);cursor:pointer}
+.cb[aria-pressed="true"]{background:var(--bg-3);border-color:var(--text-3);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:10px;margin:14px 0 0}
+.mc{background:var(--bg-2);border-radius:9px;padding:10px 12px}
+.mc .lbl{font-size:11.5px;color:var(--text-3);font-family:var(--font-mono)}
+.mc .val{font-size:17px;font-weight:600;font-family:var(--font-mono);margin-top:2px;line-height:1.3}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0}
+th,td{border:0.5px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg-2);font-weight:600;text-align:center}
+td.m{font-family:var(--font-mono);white-space:nowrap}
+.center td,{text-align:center}
+blockquote{margin:12px 0;padding:9px 15px;border-left:2px solid var(--line);color:var(--text-2);font-size:13.5px}
+ul,ol{padding-left:22px;font-size:14px}
+li{margin:4px 0}
+footer{margin-top:46px;padding-top:12px;border-top:0.5px solid var(--line);font-size:12px;color:var(--text-3)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:12px}
+.card{background:var(--bg-2);border-radius:10px;padding:14px 16px}
+.card h4{margin:0 0 6px;font-size:13.5px;font-weight:600}
+.card ul{padding-left:18px;font-size:13px;margin:6px 0}
+.kv{font-family:var(--font-mono);font-size:12.5px;color:var(--text-2);margin:3px 0}
+svg .fbox{stroke-width:0.5}
+.f-power rect{fill:#FAEEDA;stroke:#854F0B}   .f-power text{fill:#633806}
+.f-exp rect{fill:#E6F1FB;stroke:#185FA5}     .f-exp text{fill:#0C447C}
+.f-log rect{fill:#EAF3DE;stroke:#3B6D11}     .f-log text{fill:#27500A}
+.f-trig rect{fill:#FAECE7;stroke:#993C1D}    .f-trig text{fill:#712B13}
+.f-inv rect{fill:#EEEDFE;stroke:#534AB7}     .f-inv text{fill:#3C3489}
+.f-top rect{fill:var(--bg-3);stroke:var(--text-3)} .f-top text{fill:var(--text-1)}
+@media (prefers-color-scheme: dark){
+  .f-power rect{fill:#2a2113;stroke:#FAC775} .f-power text{fill:#FAC775}
+  .f-exp rect{fill:#12283c;stroke:#85B7EB}   .f-exp text{fill:#85B7EB}
+  .f-log rect{fill:#1e2a13;stroke:#97C459}   .f-log text{fill:#97C459}
+  .f-trig rect{fill:#33190f;stroke:#F0997B}  .f-trig text{fill:#F0997B}
+  .f-inv rect{fill:#231f45;stroke:#AFA9EC}   .f-inv text{fill:#AFA9EC}
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>五大类初等函数 · 快速回忆复习地图</h1>
+<p class="lead">
+  两三年没碰数学，忘掉的大概率不是「怎么算」，而是<b>图像的形状</b>和<b>谁是谁的反函数</b>。
+  这个页面按你列的五类组织，每一类都配一张<b>能拖动的图</b>：拖参数看图像怎么变，比看静态图记得牢。
+</p>
+
+<nav class="tabs">
+  <button class="tb" data-tab="overview" aria-pressed="true">① 总览·家族地图</button>
+  <button class="tb" data-tab="trig" aria-pressed="false">② 三角函数</button>
+  <button class="tb" data-tab="power" aria-pressed="false">③ 幂函数</button>
+  <button class="tb" data-tab="exp" aria-pressed="false">④ 指数函数</button>
+  <button class="tb" data-tab="log" aria-pressed="false">⑤ 对数函数</button>
+  <button class="tb" data-tab="inv" aria-pressed="false">⑥ 反函数·指对互换</button>
+  <button class="tb" data-tab="tf" aria-pressed="false">⑦ 图像变换</button>
+</nav>
+
+<!-- ══════════ ① 总览 ══════════ -->
+<section class="panel on" id="tab-overview">
+  <h2>先看全局：这五类是怎么串起来的</h2>
+  <p>五类基本初等函数不是并列的五个孤立事物，它们之间有<b>两条「互为反函数」的通道</b>，这是最容易忘、也最该记住的结构。</p>
+
+  <svg viewBox="0 0 680 372" width="100%" role="img" xmlns="http://www.w3.org/2000/svg" style="font-family:inherit">
+    <title>五大类基本初等函数的家族关系</title>
+    <desc>幂函数独立成族；指数函数与对数函数互为反函数，图像关于 y=x 对称；三角函数与反三角函数互为反函数，但需要限制定义域取主值分支。</desc>
+    <defs>
+      <marker id="a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <g class="f-top fbox">
+      <rect x="250" y="16" width="180" height="34" rx="8"/>
+      <text x="340" y="37" font-size="13.5" font-weight="500" text-anchor="middle">基本初等函数（5 类）</text>
+    </g>
+
+    <line x1="340" y1="50" x2="340" y2="76" stroke="var(--axis)" stroke-width="1" marker-end="url(#a8)"/>
+
+    <g class="f-power fbox">
+      <rect x="255" y="80" width="170" height="52" rx="9"/>
+      <text x="340" y="101" font-size="13.5" font-weight="500" text-anchor="middle">幂函数</text>
+      <text x="340" y="119" font-size="12" text-anchor="middle">y = x^a　（a 为常数）</text>
+    </g>
+    <text x="440" y="110" font-size="11.5" fill="var(--text-3)">自带一族，指数可以是任意实数</text>
+
+    <line x1="340" y1="132" x2="340" y2="152" stroke="var(--axis)" stroke-width="1" marker-end="url(#a8)"/>
+
+    <g class="f-exp fbox">
+      <rect x="62" y="158" width="176" height="58" rx="9"/>
+      <text x="150" y="180" font-size="13.5" font-weight="500" text-anchor="middle">指数函数</text>
+      <text x="150" y="199" font-size="12" text-anchor="middle">y = a^x　（a&gt;0, a≠1）</text>
+    </g>
+    <line x1="238" y1="187" x2="442" y2="187" stroke="var(--c1)" stroke-width="1.2" marker-end="url(#a8)" marker-start="url(#a8)"/>
+    <text x="340" y="176" font-size="12" fill="var(--c1)" text-anchor="middle">互为反函数</text>
+    <text x="340" y="203" font-size="11.5" fill="var(--text-3)" text-anchor="middle">图像关于 y = x 对称</text>
+    <g class="f-log fbox">
+      <rect x="442" y="158" width="176" height="58" rx="9"/>
+      <text x="530" y="180" font-size="13.5" font-weight="500" text-anchor="middle">对数函数</text>
+      <text x="530" y="199" font-size="12" text-anchor="middle">y = logₐx　（a&gt;0, a≠1）</text>
+    </g>
+
+    <g class="f-trig fbox">
+      <rect x="62" y="248" width="176" height="58" rx="9"/>
+      <text x="150" y="270" font-size="13.5" font-weight="500" text-anchor="middle">三角函数</text>
+      <text x="150" y="289" font-size="12" text-anchor="middle">sin / cos / tan</text>
+    </g>
+    <line x1="238" y1="277" x2="442" y2="277" stroke="var(--c4)" stroke-width="1.2" marker-end="url(#a8)" marker-start="url(#a8)"/>
+    <text x="340" y="266" font-size="12" fill="var(--c4)" text-anchor="middle">互为反函数</text>
+    <text x="340" y="293" font-size="11.5" fill="var(--text-3)" text-anchor="middle">必须限制定义域，取主值分支</text>
+    <g class="f-inv fbox">
+      <rect x="442" y="248" width="176" height="58" rx="9"/>
+      <text x="530" y="270" font-size="13.5" font-weight="500" text-anchor="middle">反三角函数</text>
+      <text x="530" y="289" font-size="12" text-anchor="middle">arcsin / arccos / arctan</text>
+    </g>
+
+    <text x="340" y="340" font-size="12" fill="var(--text-3)" text-anchor="middle">这五类经「四则运算 + 复合」生成的，全叫初等函数（数二考题的全部范围）</text>
+  </svg>
+
+  <h2>五类速查卡</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>幂函数　y = x^a</h4>
+      <div class="kv">定义域 / 值域：随 a 而定</div>
+      <div class="kv">恒过：a&gt;0 → (0,0) 和 (1,1)；a&lt;0 → 只过 (1,1)</div>
+      <div class="kv">特征：a&gt;0 时在 (0,+∞) 单调增</div>
+      <ul><li>a 为正整数 → 多项式型</li><li>a 为负数 → 双曲线型，有渐近线</li><li>a 为分数 → 根式型，注意定义域</li></ul>
+    </div>
+    <div class="card">
+      <h4>指数函数　y = a^x</h4>
+      <div class="kv">定义域 ℝ；值域 (0, +∞)</div>
+      <div class="kv">恒过：(0, 1)　—— 无论 a 是多少</div>
+      <div class="kv">单调：a&gt;1 增；0&lt;a&lt;1 减</div>
+      <ul><li>x 轴（y=0）是水平渐近线，永远碰不到</li><li>a^x 永远 &gt; 0</li></ul>
+    </div>
+    <div class="card">
+      <h4>对数函数　y = logₐx</h4>
+      <div class="kv">定义域 (0, +∞)；值域 ℝ</div>
+      <div class="kv">恒过：(1, 0)　—— 无论 a 是多少</div>
+      <div class="kv">单调：a&gt;1 增；0&lt;a&lt;1 减</div>
+      <ul><li>y 轴（x=0）是垂直渐近线</li><li>是 a^x 的反函数，图像关于 y=x 对称</li></ul>
+    </div>
+    <div class="card">
+      <h4>三角函数　sin / cos / tan</h4>
+      <div class="kv">sin, cos：定义域 ℝ，值域 [−1, 1]</div>
+      <div class="kv">tan：定义域 x ≠ π/2 + kπ，值域 ℝ</div>
+      <div class="kv">周期：sin/cos 为 2π；tan 为 π</div>
+      <ul><li>sin 奇函数，cos 偶函数，tan 奇函数</li><li>tan 有垂直渐近线 x = π/2 + kπ</li></ul>
+    </div>
+    <div class="card">
+      <h4>反三角函数　arcsin / arccos / arctan</h4>
+      <div class="kv">arcsin：定义域 [−1,1]，值域 [−π/2, π/2]</div>
+      <div class="kv">arccos：定义域 [−1,1]，值域 [0, π]</div>
+      <div class="kv">arctan：定义域 ℝ，值域 (−π/2, π/2)</div>
+      <ul><li><b>关键</b>：arcsin/arccos 是闭区间，arctan 是开区间</li><li>所以 arctan 的水平渐近线永远取不到</li></ul>
+    </div>
+    <div class="card">
+      <h4>反函数关系</h4>
+      <div class="kv">判定：f 是一一映射 ⟺ 存在反函数</div>
+      <div class="kv">充分条件：f 严格单调</div>
+      <div class="kv">对称：y=f(x) 与 y=f⁻¹(x) 关于 y = x 对称</div>
+      <ul><li>f⁻¹(f(x)) = x　且　f(f⁻¹(x)) = x</li><li>互反函数：定义域与值域互换</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ② 三角函数 ══════════ -->
+<section class="panel" id="tab-trig">
+  <h2>三角函数：一切从单位圆长出来</h2>
+  <p>拖动下面的角度，看左边圆上的点怎么动、右边曲线上的点怎么跟着动。<b>先建立「转圈 → 波形」的直觉</b>，再看诱导公式会轻松很多。</p>
+
+  <canvas id="cvTrig"></canvas>
+
+  <div class="ctl">
+    <span>θ = <b id="thv">0.79</b> rad（<b id="thd">45</b>°）</span>
+    <input id="slTh" type="range" min="0" max="6.2832" step="0.01" value="0.7854">
+  </div>
+
+  <div class="metrics">
+    <div class="mc"><div class="lbl">sin θ</div><div class="val" id="tSin">—</div></div>
+    <div class="mc"><div class="lbl">cos θ</div><div class="val" id="tCos">—</div></div>
+    <div class="mc"><div class="lbl">tan θ = sin/cos</div><div class="val" id="tTan">—</div></div>
+    <div class="mc"><div class="lbl">所在象限</div><div class="val" id="tQ">—</div></div>
+  </div>
+
+  <h3>图像要点</h3>
+  <table>
+  <thead><tr><th>函数</th><th>定义域</th><th>值域</th><th>周期</th><th>奇偶</th><th>关键</th></tr></thead>
+  <tbody>
+  <tr><td class="m">y = sin x</td><td>ℝ</td><td>[−1, 1]</td><td>2π</td><td>奇</td><td>过原点，在 0 附近像直线 y = x</td></tr>
+  <tr><td class="m">y = cos x</td><td>ℝ</td><td>[−1, 1]</td><td>2π</td><td>偶</td><td>= sin(x + π/2)，左移 π/2 得到</td></tr>
+  <tr><td class="m">y = tan x</td><td>x ≠ π/2 + kπ</td><td>ℝ</td><td>π</td><td>奇</td><td>垂直渐近线 x = π/2 + kπ</td></tr>
+  </tbody>
+  </table>
+
+  <h3>特殊角速查（只背第一象限，其余靠诱导公式推）</h3>
+  <table>
+  <thead><tr><th>θ</th><th>0</th><th>π/6</th><th>π/4</th><th>π/3</th><th>π/2</th><th>π</th><th>3π/2</th><th>2π</th></tr></thead>
+  <tbody>
+  <tr><td class="m"><b>sin θ</b></td><td class="m">0</td><td class="m">1/2</td><td class="m">√2/2</td><td class="m">√3/2</td><td class="m">1</td><td class="m">0</td><td class="m">−1</td><td class="m">0</td></tr>
+  <tr><td class="m"><b>cos θ</b></td><td class="m">1</td><td class="m">√3/2</td><td class="m">√2/2</td><td class="m">1/2</td><td class="m">0</td><td class="m">−1</td><td class="m">0</td><td class="m">1</td></tr>
+  <tr><td class="m"><b>tan θ</b></td><td class="m">0</td><td class="m">√3/3</td><td class="m">1</td><td class="m">√3</td><td class="m">不存在</td><td class="m">0</td><td class="m">不存在</td><td class="m">0</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>记忆钩子</b>：sin 的值从 0 到 1 依次是 <code>√0/2, √1/2, √2/2, √3/2, √4/2</code>——根号里就是 0,1,2,3,4。
+    cos 那一行把 sin 倒着念。<b>其他的角一律用「奇变偶不变，符号看象限」推，不用背。</b>
+  </blockquote>
+
+  <h3>必背恒等式</h3>
+  <table>
+  <thead><tr><th>名称</th><th>公式</th><th>什么时候用</th></tr></thead>
+  <tbody>
+  <tr><td>平方和</td><td class="m">sin²x + cos²x = 1</td><td>化简根号、凑平方</td></tr>
+  <tr><td>商数</td><td class="m">tan x = sin x / cos x</td><td>把 tan 换成 sin/cos</td></tr>
+  <tr><td>和差角</td><td class="m">sin(a±b) = sin a cos b ± cos a sin b<br>cos(a±b) = cos a cos b ∓ sin a sin b</td><td>拆角、凑角</td></tr>
+  <tr><td>二倍角</td><td class="m">sin 2x = 2 sin x cos x<br>cos 2x = cos²x − sin²x</td><td>升降次</td></tr>
+  <tr><td>降次（积分必用）</td><td class="m">sin²x = (1 − cos 2x)/2<br>cos²x = (1 + cos 2x)/2</td><td>积分里把平方降成一次</td></tr>
+  </tbody>
+  </table>
+</section>
+
+<!-- ══════════ ③ 幂函数 ══════════ -->
+<section class="panel" id="tab-power">
+  <h2>幂函数：指数一变，图像整族换脸</h2>
+  <p>拖动指数 a，看 <code>y = x^a</code> 怎么变。<b>重点观察两件事</b>：① 所有曲线都过 (1, 1)；② a 从正变负时，图像从「过原点」变成「贴着坐标轴走」。</p>
+
+  <canvas id="cvPow"></canvas>
+
+  <div class="ctl">
+    <span>a = <b id="nv">2.0</b></span>
+    <input id="slN" type="range" min="-3" max="3" step="0.25" value="2">
+  </div>
+  <div class="chips">
+    <button class="cb" data-n="0.5">a = 1/2（√x）</button>
+    <button class="cb" data-n="1">a = 1</button>
+    <button class="cb" data-n="2">a = 2</button>
+    <button class="cb" data-n="3">a = 3</button>
+    <button class="cb" data-n="-1">a = −1（1/x）</button>
+    <button class="cb" data-n="-2">a = −2（1/x²）</button>
+  </div>
+
+  <p class="lead" style="font-size:13.5px;margin-top:12px" id="powNote">—</p>
+
+  <h3>六个必记的幂函数</h3>
+  <table>
+  <thead><tr><th>函数</th><th>定义域</th><th>值域</th><th>奇偶</th><th>单调性</th><th>恒过的点</th></tr></thead>
+  <tbody>
+  <tr><td class="m">y = x</td><td>ℝ</td><td>ℝ</td><td>奇</td><td>增</td><td>(0,0), (1,1)</td></tr>
+  <tr><td class="m">y = x²</td><td>ℝ</td><td>[0, +∞)</td><td>偶</td><td>(−∞,0)↓　(0,+∞)↑</td><td>(0,0), (1,1), (−1,1)</td></tr>
+  <tr><td class="m">y = x³</td><td>ℝ</td><td>ℝ</td><td>奇</td><td>增</td><td>(0,0), (1,1), (−1,−1)</td></tr>
+  <tr><td class="m">y = √x = x^(1/2)</td><td>[0, +∞)</td><td>[0, +∞)</td><td>非奇非偶</td><td>增</td><td>(0,0), (1,1)</td></tr>
+  <tr><td class="m">y = 1/x = x^(−1)</td><td>x ≠ 0</td><td>y ≠ 0</td><td>奇</td><td>两支各自减</td><td>(1,1), (−1,−1)</td></tr>
+  <tr><td class="m">y = 1/x² = x^(−2)</td><td>x ≠ 0</td><td>(0, +∞)</td><td>偶</td><td>(−∞,0)↑　(0,+∞)↓</td><td>(1,1), (−1,1)</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>三条规律一次记完</b>：<br>
+    ① a &gt; 0 → 图像过 (0,0)，在 (0,+∞) 单调增；a &lt; 0 → 不过原点，在 (0,+∞) 单调减。<br>
+    ② 无论 a 是多少，<b>都过 (1, 1)</b>——因为 1 的任何次方都是 1。<br>
+    ③ a 是偶数（或分母为偶数的分数）→ 偶函数，图像关于 y 轴对称。
+  </blockquote>
+</section>
+
+<!-- ══════════ ④ 指数函数 ══════════ -->
+<section class="panel" id="tab-exp">
+  <h2>指数函数：一个「弯曲方向」的开关</h2>
+  <p>拖动底数 a。注意当 a 跨过 1 的时候，整条曲线从「上升」翻转成「下降」，但<b>它永远过 (0,1)，也永远在 x 轴上方</b>。</p>
+
+  <canvas id="cvExp"></canvas>
+
+  <div class="ctl">
+    <span>a = <b id="av">2.00</b></span>
+    <input id="slA" type="range" min="0.1" max="4" step="0.05" value="2">
+  </div>
+  <div class="chips">
+    <button class="cb" data-a="0.5">a = 1/2</button>
+    <button class="cb" data-a="0.8">a = 0.8</button>
+    <button class="cb" data-a="2">a = 2</button>
+    <button class="cb" data-a="2.718281828">a = e ≈ 2.718</button>
+    <button class="cb" data-a="3">a = 3</button>
+  </div>
+
+  <h3>图像要点</h3>
+  <table>
+  <thead><tr><th>项目</th><th>内容</th></tr></thead>
+  <tbody>
+  <tr><td>定义域</td><td class="m">ℝ（全体实数）</td></tr>
+  <tr><td>值域</td><td class="m">(0, +∞)　—— <b>a^x 恒为正，绝不为零</b></td></tr>
+  <tr><td>恒过点</td><td class="m">(0, 1)：因为 a⁰ = 1，与 a 无关</td></tr>
+  <tr><td>另一个参考点</td><td class="m">(1, a)：用来判断陡峭程度</td></tr>
+  <tr><td>单调性</td><td class="m">a &gt; 1 → 单调递增；0 &lt; a &lt; 1 → 单调递减</td></tr>
+  <tr><td>渐近线</td><td class="m">y = 0（x 轴），是水平渐近线，永远取不到</td></tr>
+  <tr><td>特殊规律</td><td class="m">y = a^x 与 y = (1/a)^x 的图像关于 <b>y 轴</b>对称</td></tr>
+  </tbody>
+  </table>
+
+  <h3>指数运算律（忘了就回来看）</h3>
+  <table>
+  <thead><tr><th>公式</th><th>白话</th></tr></thead>
+  <tbody>
+  <tr><td class="m">a^m · a^n = a^(m+n)</td><td>同底相乘 → 指数相加</td></tr>
+  <tr><td class="m">a^m / a^n = a^(m−n)</td><td>同底相除 → 指数相减</td></tr>
+  <tr><td class="m">(a^m)^n = a^(mn)</td><td>幂的幂 → 指数相乘</td></tr>
+  <tr><td class="m">(ab)^n = a^n · b^n</td><td>积的幂 → 分别乘方</td></tr>
+  <tr><td class="m">a^0 = 1　(a ≠ 0)</td><td>任何非零数的 0 次方都是 1</td></tr>
+  <tr><td class="m">a^(−n) = 1 / a^n</td><td>负指数 → 取倒数</td></tr>
+  <tr><td class="m">a^(m/n) = ⁿ√(a^m)</td><td>分数指数 → 根式</td></tr>
+  <tr><td class="m"><b>a^x = e^(x·ln a)</b></td><td><b>数二求导/积分遇到 a^x 的第一步，务必记住</b></td></tr>
+  </tbody>
+  </table>
+</section>
+
+<!-- ══════════ ⑤ 对数函数 ══════════ -->
+<section class="panel" id="tab-log">
+  <h2>对数函数：指数函数的「镜像」</h2>
+  <p>拖动底数 a，蓝色的 <code>y = a^x</code> 和绿色的 <code>y = logₐx</code> 会同步变化。
+  注意那条虚线 <code>y = x</code>——两条曲线<b>永远是它两侧的镜像</b>，这是反函数关系最直观的证据。</p>
+
+  <canvas id="cvLog"></canvas>
+
+  <div class="ctl">
+    <span>a = <b id="lav">2.00</b></span>
+    <input id="slLA" type="range" min="0.15" max="4" step="0.05" value="2">
+  </div>
+  <div class="chips">
+    <button class="cb" data-la="0.5">a = 1/2</button>
+    <button class="cb" data-la="2">a = 2</button>
+    <button class="cb" data-la="2.718281828">a = e（即 ln x）</button>
+    <button class="cb" data-la="10">a = 10（即 lg x）</button>
+  </div>
+
+  <h3>图像要点</h3>
+  <table>
+  <thead><tr><th>项目</th><th>内容</th></tr></thead>
+  <tbody>
+  <tr><td>定义域</td><td class="m">(0, +∞)　—— <b>真数必须为正</b>，这是解不等式时的常考点</td></tr>
+  <tr><td>值域</td><td class="m">ℝ</td></tr>
+  <tr><td>恒过点</td><td class="m">(1, 0)：因为 log_a 1 = 0，与 a 无关</td></tr>
+  <tr><td>另一个参考点</td><td class="m">(a, 1)</td></tr>
+  <tr><td>单调性</td><td class="m">a &gt; 1 → 增；0 &lt; a &lt; 1 → 减</td></tr>
+  <tr><td>渐近线</td><td class="m">x = 0（y 轴），是<b>垂直</b>渐近线</td></tr>
+  <tr><td>与指数关系</td><td class="m">y = logₐx 是 y = a^x 的反函数，图像关于 <b>y = x</b> 对称</td></tr>
+  </tbody>
+  </table>
+
+  <h3>对数运算律</h3>
+  <table>
+  <thead><tr><th>公式</th><th>白话</th></tr></thead>
+  <tbody>
+  <tr><td class="m">logₐ(MN) = logₐM + logₐN</td><td>积 → 和（<b>这是对数被发明的理由：把乘法变成加法</b>）</td></tr>
+  <tr><td class="m">logₐ(M/N) = logₐM − logₐN</td><td>商 → 差</td></tr>
+  <tr><td class="m">logₐ(M^n) = n · logₐM</td><td>把指数拉下来（<b>处理幂指函数必用</b>）</td></tr>
+  <tr><td class="m">logₐ1 = 0；logₐa = 1</td><td>两个基本值</td></tr>
+  <tr><td class="m">logₐb = ln b / ln a</td><td>换底公式，统一到 e</td></tr>
+  <tr><td class="m">a^(logₐN) = N</td><td>指数与对数互相抵消</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>增长阶（x → +∞，非常重要）</b>：<code>ln x ≪ x^a ≪ a^x ≪ x^x</code><br>
+    念法：「对数最慢，幂函数中间，指数最快」。做 <code>∞/∞</code> 抓大头时全靠这个。
+  </blockquote>
+</section>
+
+<!-- ══════════ ⑥ 反函数 ══════════ -->
+<section class="panel" id="tab-inv">
+  <h2>反函数：把「输入输出」调个头</h2>
+  <p>函数 <code>y = f(x)</code> 是说「给 x，算出 y」。反函数 <code>y = f⁻¹(x)</code> 是反过来：「给 y，问原来是哪个 x」。
+  <b>几何上就是把这个点沿 y = x 翻折过去。</b></p>
+
+  <canvas id="cvInv"></canvas>
+
+  <div class="ctl">
+    <span>点 P 的横坐标 a = <b id="pav">1.5</b></span>
+    <input id="slPx" type="range" min="-2.6" max="2.6" step="0.05" value="1.5">
+    <span>纵坐标 b = <b id="pbv">1.4</b></span>
+    <input id="slPy" type="range" min="-2.6" max="2.6" step="0.05" value="1.4">
+  </div>
+  <p style="font-size:13px;color:var(--text-2);margin-top:8px">
+    拖动两个滑块，P(a, b) 和它的镜像 P′(b, a) 始终关于 <code>y = x</code> 对称。这就是「反函数图像关于 y=x 对称」的全部含义。
+  </p>
+
+  <h3>三个必记性质</h3>
+  <ul>
+    <li><b>存在性</b>：函数有反函数 ⟺ 它是一一映射（每个 y 只对应一个 x）。<b>严格单调</b>是保证一一映射的充分条件。</li>
+    <li><b>定义域值域互换</b>：f⁻¹ 的定义域 = f 的值域；f⁻¹ 的值域 = f 的定义域。</li>
+    <li><b>互逆抵消</b>：<code>f⁻¹(f(x)) = x</code>（x 在 f 的定义域内）；<code>f(f⁻¹(x)) = x</code>（x 在 f⁻¹ 的定义域内）。</li>
+  </ul>
+
+  <h3>反三角函数：定义域被「切一刀」的产物</h3>
+  <p class="lead" style="font-size:13.5px">sin、cos、tan 都是周期的，本来没有反函数。为了让它们有反函数，数学上把定义域<b>限制在一个单调区间</b>里，这就是「主值分支」。</p>
+  <table>
+  <thead><tr><th>函数</th><th>定义域</th><th>值域（主值区间）</th><th>端点</th><th>奇偶性</th></tr></thead>
+  <tbody>
+  <tr><td class="m">y = arcsin x</td><td>[−1, 1]</td><td class="m"><b>[−π/2, π/2]</b></td><td>取得到</td><td>奇函数</td></tr>
+  <tr><td class="m">y = arccos x</td><td>[−1, 1]</td><td class="m"><b>[0, π]</b></td><td>取得到</td><td>非奇非偶</td></tr>
+  <tr><td class="m">y = arctan x</td><td>ℝ</td><td class="m"><b>(−π/2, π/2)</b></td><td class="warn"><b>取不到</b></td><td>奇函数</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>这张表最重要的信息</b>：arcsin / arccos 是<b>闭区间</b>（端点能取到），arctan 是<b>开区间</b>（端点永远取不到）。<br>
+    所以只能写 <code>lim(x→+∞) arctan x = π/2</code>，<b>绝不能写</b> <code>arctan(+∞) = π/2</code>——这正是例 1-2 里那个 −π/2 的来源。
+  </blockquote>
+
+  <h3>指对互换：一个等式，两个方向</h3>
+  <p>这是最容易忘、但复习一遍就能捡回来的一组关系。核心只有一句话：</p>
+  <div class="card" style="text-align:center;font-size:16px;font-family:var(--font-mono);padding:18px">
+    a<sup>b</sup> = N　　⟺　　log<sub>a</sub>N = b
+    <div style="font-size:12.5px;color:var(--text-2);margin-top:8px;font-family:inherit">
+      「a 的 b 次方等于 N」和「以 a 为底 N 的对数是 b」<b>说的是同一件事</b>
+    </div>
+  </div>
+  <table>
+  <thead><tr><th>指数形式</th><th>对数形式</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td class="m">2³ = 8</td><td class="m">log₂8 = 3</td><td>底数 2 不变，3 和 8 换位置</td></tr>
+  <tr><td class="m">10² = 100</td><td class="m">lg 100 = 2</td><td>lg 表示以 10 为底</td></tr>
+  <tr><td class="m">e⁰ = 1</td><td class="m">ln 1 = 0</td><td>ln 表示以 e 为底</td></tr>
+  <tr><td class="m">a^(logₐN) = N</td><td class="m">logₐ(a^b) = b</td><td>两者互相抵消，回到原样</td></tr>
+  <tr><td class="m">e^(ln x) = x　(x&gt;0)</td><td class="m">ln(e^x) = x</td><td>最常用的两个特例</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>口诀</b>：<b>底数不动，指数与真数换位</b>。<br>
+    <code>a^b = N</code> 里的 b（指数）搬到等号右边就变成 log 的结果；N 从右边搬到真数位置。
+  </blockquote>
+</section>
+
+<!-- ══════════ ⑦ 图像变换 ══════════ -->
+<section class="panel" id="tab-tf">
+  <h2>图像变换：改一个系数，图像怎么动</h2>
+  <p>选一个基础函数，然后拖四个滑块。灰色是原来的 <code>y = f(x)</code>，彩色的是变换后的 <code>y = A·f(k(x + b)) + c</code>。
+  <b>四个参数分别管一件事，互不干扰。</b></p>
+
+  <canvas id="cvTf"></canvas>
+  <p id="fml" style="font-family:var(--font-mono);font-size:13.5px;text-align:center;margin:10px 0 0;color:var(--text-1);min-height:22px">—</p>
+
+  <div class="chips">
+    <button class="cb" data-base="sq" aria-pressed="true">基础：y = x²</button>
+    <button class="cb" data-base="ex">基础：y = e^x</button>
+    <button class="cb" data-base="ln">基础：y = ln x</button>
+    <button class="cb" data-base="sin">基础：y = sin x</button>
+  </div>
+
+  <div class="ctl">
+    <span>A = <b id="tvA">1.00</b></span>
+    <input id="slTA" type="range" min="-2" max="2" step="0.05" value="1">
+  </div>
+  <div class="ctl">
+    <span>k = <b id="tvK">1.00</b></span>
+    <input id="slTK" type="range" min="0.25" max="3" step="0.05" value="1">
+  </div>
+  <div class="ctl">
+    <span>b = <b id="tvB">0.00</b></span>
+    <input id="slTB" type="range" min="-3" max="3" step="0.1" value="0">
+  </div>
+  <div class="ctl">
+    <span>c = <b id="tvC">0.00</b></span>
+    <input id="slTC" type="range" min="-3" max="3" step="0.1" value="0">
+  </div>
+  <div class="chips">
+    <button class="cb" id="btnReset">重置全部</button>
+    <button class="cb" id="btnDemo">看一个例子：y = 2(x−1)² + 1</button>
+  </div>
+
+  <h3>变换口诀表</h3>
+  <table>
+  <thead><tr><th>变换</th><th>写法</th><th>图像怎么动</th><th>记忆口诀</th></tr></thead>
+  <tbody>
+  <tr><td>纵向平移</td><td class="m">y = f(x) + c</td><td>c &gt; 0 向上移 c，c &lt; 0 向下移 |c|</td><td><b>上加下减</b></td></tr>
+  <tr><td>横向平移</td><td class="m">y = f(x + b)</td><td>b &gt; 0 向<b>左</b>移 b，b &lt; 0 向<b>右</b>移 |b|</td><td><b>左加右减</b>（与直觉相反！）</td></tr>
+  <tr><td>纵向伸缩</td><td class="m">y = A · f(x)</td><td>|A| &gt; 1 纵向拉伸，|A| &lt; 1 纵向压缩</td><td>A 管高度</td></tr>
+  <tr><td>横向伸缩</td><td class="m">y = f(kx)</td><td>k &gt; 1 横向<b>压缩</b>到 1/k，0 &lt; k &lt; 1 横向拉伸</td><td><b>k 管胖瘦，与直觉相反</b></td></tr>
+  <tr><td>关于 x 轴翻折</td><td class="m">y = −f(x)</td><td>上下翻转</td><td>负号在外面 → 上下翻</td></tr>
+  <tr><td>关于 y 轴翻折</td><td class="m">y = f(−x)</td><td>左右翻转</td><td>负号在里面 → 左右翻</td></tr>
+  <tr><td>加绝对值（下翻上）</td><td class="m">y = |f(x)|</td><td>x 轴下方部分翻到上方</td><td>整体加绝对值 → 下翻上</td></tr>
+  <tr><td>加绝对值（右翻左）</td><td class="m">y = f(|x|)</td><td>保留 y 轴右侧，再左右镜像</td><td>只给 x 加 → 右翻左</td></tr>
+  </tbody>
+  </table>
+  <blockquote>
+    <b>最容易记反的两个</b>：<br>
+    ① <code>f(x + 2)</code> 是<b>向左</b>移，不是向右——因为要让括号里等于原来那个值，x 得变<b>小</b>。<br>
+    ② <code>f(2x)</code> 是<b>横向压缩</b>，不是拉伸——同理，x 只要原来的一半就能达到同样的效果。<br>
+    <b>共同原因：横向变换是「反着来」的。</b>
+  </blockquote>
+</section>
+
+<footer>考研数学二 · 第 1 章 极限 · 图表 008　｜　配套笔记：<code>../笔记/005-五大类初等函数复习地图.md</code></footer>
+
+</main>
+
+<script>
+(function(){
+  /* ---------- 基础工具 ---------- */
+  function cssv(n, fb){
+    var v = getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    return v || fb;
+  }
+  function C(){
+    return {
+      grid: cssv('--grid','rgba(0,0,0,.07)'),
+      axis: cssv('--axis','#b4b2a9'),
+      c1: cssv('--c1','#185FA5'),
+      c2: cssv('--c2','#D85A30'),
+      c3: cssv('--c3','#3B6D11'),
+      c4: cssv('--c4','#993556'),
+      c5: cssv('--c5','#534AB7'),
+      pt: cssv('--pt','#BA7517'),
+      ghost: cssv('--ghost','#c9c7bf'),
+      text: cssv('--text-3','#8a8880'),
+      text2: cssv('--text-2','#5f5e5a')
+    };
+  }
+  var FONT = '-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif';
+
+  function mk(cv){
+    var dpr = window.devicePixelRatio || 1;
+    var W = cv.clientWidth || 600, H = cv.clientHeight || 300;
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+    var g = cv.getContext('2d');
+    g.setTransform(dpr,0,0,dpr,0,0);
+    g.clearRect(0,0,W,H);
+    return {g:g, W:W, H:H};
+  }
+  function mapper(W,H,pad,xr,yr){
+    var iw = W-pad.l-pad.r, ih = H-pad.t-pad.b;
+    return {
+      X: function(x){ return pad.l + (x-xr[0])/(xr[1]-xr[0])*iw; },
+      Y: function(y){ return H-pad.b - (y-yr[0])/(yr[1]-yr[0])*ih; },
+      iw: iw, ih: ih, px: pad.l, py: pad.t
+    };
+  }
+  function axes(g, m, C, W, H, xr, yr, label){
+    g.strokeStyle = C.grid; g.lineWidth = 1;
+    g.beginPath();
+    for(var x=Math.ceil(xr[0]); x<=xr[1]; x++){
+      if(x === 0) continue;
+      g.moveTo(m.X(x), 0); g.lineTo(m.X(x), H);
+    }
+    for(var y=Math.ceil(yr[0]); y<=yr[1]; y++){
+      if(y === 0) continue;
+      g.moveTo(0, m.Y(y)); g.lineTo(W, m.Y(y));
+    }
+    g.stroke();
+    var ax = (yr[0]<=0 && 0<=yr[1]) ? m.Y(0) : H-1;
+    var ay = (xr[0]<=0 && 0<=xr[1]) ? m.X(0) : 1;
+    g.strokeStyle = C.axis; g.lineWidth = 1;
+    g.beginPath();
+    g.moveTo(m.X(xr[0]), ax); g.lineTo(W-2, ax);
+    g.moveTo(ay, m.Y(yr[0])); g.lineTo(ay, 2);
+    g.stroke();
+    g.fillStyle = C.text; g.font = '11px ' + FONT;
+    g.textAlign = 'center'; g.textBaseline = 'top';
+    for(var x2=Math.ceil(xr[0]); x2<=xr[1]; x2++){
+      if(x2 === 0) continue;
+      g.fillText(String(x2), m.X(x2), ax+4);
+    }
+    g.textAlign = 'right'; g.textBaseline = 'middle';
+    for(var y2=Math.ceil(yr[0]); y2<=yr[1]; y2++){
+      if(y2 === 0) continue;
+      g.fillText(String(y2), ay-5, m.Y(y2));
+    }
+    if(label){ g.fillStyle = C.text2; g.font = '12px ' + FONT; g.textAlign='left'; g.textBaseline='top'; g.fillText(label, 8, 6); }
+  }
+  function plot(g, m, f, C, color, xr, yr, width){
+    g.save();
+    g.beginPath(); g.rect(m.px, m.py, m.iw, m.ih); g.clip();
+    g.strokeStyle = color; g.lineWidth = width || 2;
+    g.lineJoin = 'round'; g.lineCap = 'round';
+    g.beginPath();
+    var N = 900, started = false;
+    for(var i=0;i<=N;i++){
+      var x = xr[0] + i/N*(xr[1]-xr[0]);
+      var y = f(x);
+      if(!isFinite(y) || isNaN(y)){ started = false; continue; }
+      var Y = m.Y(y);
+      if(!started){ g.moveTo(m.X(x), Y); started = true; }
+      else { g.lineTo(m.X(x), Y); }
+    }
+    g.stroke();
+    g.restore();
+  }
+  function dot(g, m, x, y, color, r){
+    g.beginPath(); g.arc(m.X(x), m.Y(y), r||4.5, 0, Math.PI*2);
+    g.fillStyle = color; g.fill();
+  }
+  function sdot(g, x, y, color, r){
+    g.beginPath(); g.arc(x, y, r||4.5, 0, Math.PI*2);
+    g.fillStyle = color; g.fill();
+  }
+  function tag(g, m, x, y, text, color, dx, dy){
+    g.fillStyle = color; g.font = '11.5px ' + FONT;
+    g.textAlign = 'left'; g.textBaseline = 'middle';
+    g.fillText(text, m.X(x) + (dx||7), m.Y(y) + (dy||0));
+  }
+  function fmtv(v, d){
+    if(!isFinite(v)) return '不存在';
+    if(Math.abs(v) > 1e5) return v.toExponential(2).replace('e+','×10^');
+    return v.toFixed(d === undefined ? 3 : d);
+  }
+
+  /* ---------- ① 无需绘制 ---------- */
+
+  /* ---------- ② 三角函数 ---------- */
+  var cvTrig = document.getElementById('cvTrig');
+  var slTh = document.getElementById('slTh');
+  function drawTrig(){
+    var s = mk(cvTrig), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var th = parseFloat(slTh.value);
+    var R = Math.min(88, W*0.115);
+    var cx = 26 + R, cy = H/2;
+
+    g.strokeStyle = c.grid; g.lineWidth = 1;
+    g.beginPath(); g.arc(cx, cy, R, 0, Math.PI*2); g.stroke();
+    g.strokeStyle = c.axis;
+    g.beginPath();
+    g.moveTo(cx-R-16, cy); g.lineTo(cx+R+16, cy);
+    g.moveTo(cx, cy-R-16); g.lineTo(cx, cy+R+16);
+    g.stroke();
+
+    var px = cx + R*Math.cos(th), py = cy - R*Math.sin(th);
+
+    g.strokeStyle = c.c1; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(cx, cy); g.lineTo(px, cy); g.stroke();
+    g.strokeStyle = c.c2; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(px, cy); g.lineTo(px, py); g.stroke();
+
+    g.strokeStyle = c.text; g.lineWidth = 1.2; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(cx, cy); g.lineTo(px, py); g.stroke();
+    g.setLineDash([]);
+
+    g.strokeStyle = c.c5; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(cx, cy, R*0.28, 0, -th, true); g.stroke();
+
+    sdot(g, px, py, c.pt, 4.5);
+
+    g.fillStyle = c.c1; g.font = '11px ' + FONT; g.textAlign='center'; g.textBaseline='middle';
+    g.fillText('cos θ', cx + R*Math.cos(th)/2, cy + 12);
+    g.fillStyle = c.c2;
+    g.fillText('sin θ', px + (Math.cos(th) >= 0 ? 20 : -20), cy - R*Math.sin(th)/2);
+    g.fillStyle = c.text;
+    g.fillText('1', cx - 10, cy - 8);
+
+    var x0 = cx + R + 36, x1 = W - 14;
+    if(x1 - x0 < 80) return;
+    var ymax = 1.25;
+    var m2 = {
+      X: function(t){ return x0 + t/(Math.PI*2)*(x1-x0); },
+      Y: function(v){ return cy - v/ymax*(Math.min(cy, H-cy) - 14); }
+    };
+    g.strokeStyle = c.grid; g.lineWidth = 1;
+    g.beginPath();
+    for(var k=1;k<=4;k++){ var t=k*Math.PI/2; g.moveTo(m2.X(t), 14); g.lineTo(m2.X(t), H-14); }
+    g.stroke();
+    g.strokeStyle = c.axis;
+    g.beginPath(); g.moveTo(x0, m2.Y(0)); g.lineTo(x1, m2.Y(0)); g.stroke();
+
+    g.fillStyle = c.text; g.font = '10.5px ' + FONT; g.textAlign = 'center'; g.textBaseline = 'top';
+    var labs = ['π/2','π','3π/2','2π'];
+    for(var j=0;j<4;j++) g.fillText(labs[j], m2.X((j+1)*Math.PI/2), m2.Y(0)+4);
+
+    function curve(fn, color){
+      g.strokeStyle = color; g.lineWidth = 2; g.beginPath();
+      for(var i=0;i<=400;i++){
+        var t = i/400*Math.PI*2;
+        var X = m2.X(t), Y = m2.Y(fn(t));
+        i ? g.lineTo(X,Y) : g.moveTo(X,Y);
+      }
+      g.stroke();
+    }
+    curve(Math.sin, c.c2);
+    curve(Math.cos, c.c1);
+
+    g.strokeStyle = c.text; g.lineWidth = 1; g.setLineDash([4,3]);
+    g.beginPath(); g.moveTo(m2.X(th), 14); g.lineTo(m2.X(th), H-14); g.stroke();
+    g.setLineDash([]);
+    dot(g, m2, th, Math.sin(th), c.c2, 4);
+    dot(g, m2, th, Math.cos(th), c.c1, 4);
+
+    g.font = '11.5px ' + FONT; g.textAlign='left'; g.textBaseline='top';
+    g.fillStyle = c.c2; g.fillText('y = sin θ', x0 + 6, 6);
+    g.fillStyle = c.c1; g.fillText('y = cos θ', x0 + 78, 6);
+
+    document.getElementById('thv').textContent = th.toFixed(2);
+    document.getElementById('thd').textContent = Math.round(th*180/Math.PI);
+    document.getElementById('tSin').textContent = fmtv(Math.sin(th), 3);
+    document.getElementById('tCos').textContent = fmtv(Math.cos(th), 3);
+    var tn = Math.tan(th);
+    document.getElementById('tTan').textContent = (Math.abs(Math.cos(th)) < 0.02) ? '不存在' : fmtv(tn, 3);
+    var q = (th % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+    var name = q < Math.PI/2 ? '第一象限' : q < Math.PI ? '第二象限' : q < 1.5*Math.PI ? '第三象限' : '第四象限';
+    document.getElementById('tQ').textContent = name;
+  }
+
+  /* ---------- ③ 幂函数 ---------- */
+  var cvPow = document.getElementById('cvPow');
+  var slN = document.getElementById('slN');
+  var NOTE_N = {
+    '-1':'a = −1：y = 1/x，双曲线。定义域 x≠0，两支分别单调递减，坐标轴是渐近线。',
+    '-2':'a = −2：y = 1/x²，偶函数，图像全在 x 轴上方，两边都向上翘。'
+  };
+  function drawPow(){
+    var s = mk(cvPow), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var n = parseFloat(slN.value);
+    var pad = {l:32, r:18, t:16, b:26};
+    var xr = [-3.6, 3.6], yr = [-4, 4];
+    var m = mapper(W,H,pad,xr,yr);
+    axes(g, m, c, W, H, xr, yr, 'y = x^a');
+
+    g.save(); g.beginPath(); g.rect(pad.l, pad.t, m.iw, m.ih); g.clip();
+    g.strokeStyle = c.ghost; g.lineWidth = 1.5; g.setLineDash([5,4]);
+    g.beginPath();
+    for(var i=0;i<=600;i++){
+      var x = xr[0] + i/600*(xr[1]-xr[0]);
+      var y = x;
+      i ? g.lineTo(m.X(x), m.Y(y)) : g.moveTo(m.X(x), m.Y(y));
+    }
+    g.stroke(); g.setLineDash([]); g.restore();
+    g.fillStyle = c.ghost; g.font = '11px ' + FONT; g.textAlign='left'; g.textBaseline='middle';
+    g.fillText('y = x（参考）', m.X(2.0)+6, m.Y(2.0));
+
+    plot(g, m, function(x){
+      if(x < 0 && Math.abs(n - Math.round(n)) > 1e-9) return NaN;
+      return Math.pow(x, n);
+    }, c, c.c1, xr, yr, 2.2);
+
+    dot(g, m, 1, 1, c.pt, 5);
+    tag(g, m, 1, 1, '(1, 1) 恒过', c.pt);
+
+    if(n > 0){
+      dot(g, m, 0, 0, c.pt, 5);
+      tag(g, m, 0, 0, '(0, 0)', c.pt, 7, -12);
+    }
+
+    var el = document.getElementById('nv');
+    el.textContent = (n % 1 === 0 ? n.toFixed(1) : n.toFixed(2));
+    var note = 'a = ' + n + '：';
+    if(n > 0){
+      note += '图像过 (0,0) 和 (1,1)，在 (0,+∞) 上单调递增。';
+      if(Math.abs(n - Math.round(n)) < 1e-9 && Math.round(n) % 2 === 0) note += ' a 为偶数 → 偶函数，图像关于 y 轴对称。';
+      else if(Math.abs(n - Math.round(n)) < 1e-9) note += ' a 为奇数 → 奇函数，图像关于原点对称。';
+      else note += ' a 为分数 → 负数部分无定义（因为负数的分数次幂不是实数）。';
+    } else {
+      note += '图像不过原点，在 (0,+∞) 上单调递减，坐标轴是它的渐近线。';
+      if(Math.abs(n + 2) < 1e-9) note += ' 这是偶函数，图像关于 y 轴对称。';
+      else if(Math.abs(n + 1) < 1e-9) note += ' 这是奇函数，图像关于原点对称。';
+    }
+    document.getElementById('powNote').textContent = note;
+  }
+
+  /* ---------- ④ 指数函数 ---------- */
+  var cvExp = document.getElementById('cvExp');
+  var slA = document.getElementById('slA');
+  function drawExp(){
+    var s = mk(cvExp), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var a = parseFloat(slA.value);
+    var pad = {l:32, r:18, t:16, b:26};
+    var xr = [-3.2, 3.2], yr = [-1, 5];
+    var m = mapper(W,H,pad,xr,yr);
+    axes(g, m, c, W, H, xr, yr, 'y = a^x');
+
+    plot(g, m, function(x){ return Math.pow(1/a, x); }, c, c.ghost, xr, yr, 1.6);
+    plot(g, m, function(x){ return Math.pow(a, x); }, c, c.c1, xr, yr, 2.4);
+
+    g.save(); g.setLineDash([5,4]); g.strokeStyle = c.axis; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(m.X(xr[0]), m.Y(0)); g.lineTo(m.X(xr[1]), m.Y(0)); g.stroke();
+    g.restore();
+
+    dot(g, m, 0, 1, c.pt, 5);
+    tag(g, m, 0, 1, '(0, 1) 恒过', c.pt, 7, -10);
+    dot(g, m, 1, a, c.c2, 4.5);
+    tag(g, m, 1, a, '(1, a)', c.c2, 7, -10);
+
+    g.fillStyle = c.ghost; g.font = '11px ' + FONT; g.textAlign='left'; g.textBaseline='middle';
+    g.fillText('y = (1/a)^x（关于 y 轴对称）', m.X(-3.0)+4, m.Y(Math.pow(1/a,-3.0)) - 12);
+
+    document.getElementById('av').textContent = (a < 2.72 && a > 2.71) ? 'e ≈ 2.718' : a.toFixed(2);
+  }
+
+  /* ---------- ⑤ 对数函数 ---------- */
+  var cvLog = document.getElementById('cvLog');
+  var slLA = document.getElementById('slLA');
+  function drawLog(){
+    var s = mk(cvLog), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var a = parseFloat(slLA.value);
+    var pad = {l:32, r:18, t:16, b:26};
+    var xr = [-3.2, 4.4], yr = [-3.2, 4.4];
+    var m = mapper(W,H,pad,xr,yr);
+    axes(g, m, c, W, H, xr, yr, 'y = a^x　与　y = logₐx　关于 y = x 对称');
+
+    g.save(); g.setLineDash([6,4]); g.strokeStyle = c.text; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(m.X(xr[0]), m.Y(xr[0])); g.lineTo(m.X(xr[1]), m.Y(xr[1])); g.stroke();
+    g.restore();
+    g.fillStyle = c.text; g.font = '11.5px ' + FONT; g.textAlign='left'; g.textBaseline='bottom';
+    g.fillText('y = x（对称轴）', m.X(3.4)+6, m.Y(3.4)-4);
+
+    plot(g, m, function(x){ return Math.pow(a, x); }, c, c.c1, xr, yr, 2.2);
+    plot(g, m, function(x){ return x > 0 ? Math.log(x)/Math.log(a) : NaN; }, c, c.c3, xr, yr, 2.2);
+
+    dot(g, m, 0, 1, c.pt, 4.5);
+    dot(g, m, 1, 0, c.pt, 4.5);
+    tag(g, m, 0, 1, '(0,1) ↔ (1,0)', c.pt, 8, -8);
+
+    g.font = '11.5px ' + FONT; g.textAlign='left'; g.textBaseline='middle';
+    g.fillStyle = c.c1; g.fillText('y = a^x', m.X(-3.0)+4, m.Y(Math.pow(a,-3.0)) - 12);
+    g.fillStyle = c.c3; g.fillText('y = logₐx', m.X(0.35)+6, m.Y(Math.log(0.35)/Math.log(a)) - 12);
+
+    document.getElementById('lav').textContent = (a < 2.72 && a > 2.71) ? 'e ≈ 2.718' : a.toFixed(2);
+  }
+
+  /* ---------- ⑥ 反函数 ---------- */
+  var cvInv = document.getElementById('cvInv');
+  var slPx = document.getElementById('slPx');
+  var slPy = document.getElementById('slPy');
+  function drawInv(){
+    var s = mk(cvInv), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var a = parseFloat(slPx.value), b = parseFloat(slPy.value);
+    var pad = {l:34, r:22, t:14, b:26};
+    var xr = [-3, 3], yr = [-3, 3];
+    var m = mapper(W,H,pad,xr,yr);
+    axes(g, m, c, W, H, xr, yr, 'P 与 P′ 关于 y = x 对称：横纵坐标互换');
+
+    g.save(); g.setLineDash([6,4]); g.strokeStyle = c.text; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(m.X(-3), m.Y(-3)); g.lineTo(m.X(3), m.Y(3)); g.stroke();
+    g.restore();
+    g.fillStyle = c.text; g.font = '11.5px ' + FONT; g.textAlign='left'; g.textBaseline='bottom';
+    g.fillText('y = x', m.X(2.6)+6, m.Y(2.6)-4);
+
+    g.save();
+    g.strokeStyle = c.pt; g.lineWidth = 1; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(m.X(a), m.Y(b)); g.lineTo(m.X(b), m.Y(a)); g.stroke();
+    g.beginPath(); g.moveTo(m.X(a), m.Y(b)); g.lineTo(m.X(a), m.Y(0)); g.stroke();
+    g.beginPath(); g.moveTo(m.X(b), m.Y(a)); g.lineTo(m.X(b), m.Y(0)); g.stroke();
+    g.restore();
+
+    dot(g, m, a, b, c.c1, 6);
+    tag(g, m, a, b, 'P(' + a.toFixed(2) + ', ' + b.toFixed(2) + ')', c.c1, 9, -6);
+    dot(g, m, b, a, c.c2, 6);
+    tag(g, m, b, a, "P′(" + b.toFixed(2) + ', ' + a.toFixed(2) + ')', c.c2, 9, 12);
+
+    document.getElementById('pav').textContent = a.toFixed(2);
+    document.getElementById('pbv').textContent = b.toFixed(2);
+  }
+
+  /* ---------- ⑦ 图像变换 ---------- */
+  var cvTf = document.getElementById('cvTf');
+  var slTA = document.getElementById('slTA'), slTK = document.getElementById('slTK');
+  var slTB = document.getElementById('slTB'), slTC = document.getElementById('slTC');
+  var base = 'sq';
+  var BASES = {
+    sq:  {f:function(x){return x*x},        name:'y = x²',    xr:[-4.2,4.2], yr:[-4,8]},
+    ex:  {f:function(x){return Math.exp(x)},name:'y = e^x',   xr:[-3.4,3.4], yr:[-4,8]},
+    ln:  {f:function(x){return x>0?Math.log(x):NaN}, name:'y = ln x', xr:[-3.4,4.4], yr:[-4,4]},
+    sin: {f:function(x){return Math.sin(x)},name:'y = sin x', xr:[-6.6,6.6], yr:[-3.4,3.4]}
+  };
+  function drawTf(){    var s = mk(cvTf), g = s.g, W = s.W, H = s.H, c = C();
+    if(W < 60) return;
+    var A = parseFloat(slTA.value), k = parseFloat(slTK.value);
+    var b = parseFloat(slTB.value), cc = parseFloat(slTC.value);
+    var B = BASES[base];
+    var pad = {l:34, r:18, t:16, b:26};
+    var m = mapper(W,H,pad,B.xr,B.yr);
+    axes(g, m, c, W, H, B.xr, B.yr, B.name + '  →  y = A · f(k(x + b)) + c');
+
+    plot(g, m, B.f, c, c.ghost, B.xr, B.yr, 1.8);
+    plot(g, m, function(x){ return A * B.f(k*(x + b)) + cc; }, c, c.c1, B.xr, B.yr, 2.4);
+
+    document.getElementById('tvA').textContent = A.toFixed(2);
+    document.getElementById('tvK').textContent = k.toFixed(2);
+    document.getElementById('tvB').textContent = b.toFixed(2);
+    document.getElementById('tvC').textContent = cc.toFixed(2);
+  }
+  function syncTf(){
+    var A = parseFloat(slTA.value), k = parseFloat(slTK.value);
+    var b = parseFloat(slTB.value), cc = parseFloat(slTC.value);
+    var fx = BASES[base].name.replace('y = ', '');
+    var inner = (k === 1) ? fx.replace('x', '(x + ' + b.toFixed(2) + ')')
+                          : fx.replace('x', '(' + k.toFixed(2) + '(x + ' + b.toFixed(2) + '))');
+    var out = 'y = ' + (A === 1 ? '' : (A === -1 ? '−' : A.toFixed(2) + ' · ')) + inner
+            + (cc === 0 ? '' : (cc > 0 ? ' + ' + cc.toFixed(2) : ' − ' + Math.abs(cc).toFixed(2)));
+    document.getElementById('fml').textContent = out;
+  }
+
+  /* ---------- Tab 分派 ---------- */
+  var DRAW = { trig: drawTrig, power: drawPow, exp: drawExp, log: drawLog, inv: drawInv, tf: drawTf };
+  var cur = 'overview';
+  function showTab(name){
+    cur = name;
+    var panels = document.querySelectorAll('.panel');
+    for(var i=0;i<panels.length;i++){
+      panels[i].className = 'panel' + (panels[i].id === 'tab-' + name ? ' on' : '');
+    }
+    var bs = document.querySelectorAll('[data-tab]');
+    for(var j=0;j<bs.length;j++){
+      bs[j].setAttribute('aria-pressed', bs[j].getAttribute('data-tab') === name ? 'true' : 'false');
+    }
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        if(DRAW[name]) DRAW[name]();
+      });
+    });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(btn){
+    btn.addEventListener('click', function(){ showTab(btn.getAttribute('data-tab')); });
+  });
+
+  /* ---------- 事件绑定 ---------- */
+  slTh.addEventListener('input', drawTrig);
+  slN.addEventListener('input', function(){
+    drawPow();
+    document.querySelectorAll('[data-n]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+  });
+  document.querySelectorAll('[data-n]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      slN.value = btn.getAttribute('data-n');
+      document.querySelectorAll('[data-n]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      drawPow();
+    });
+  });
+
+  slA.addEventListener('input', function(){
+    drawExp();
+    document.querySelectorAll('[data-a]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    document.querySelectorAll('[data-a]').forEach(function(x){
+      if(Math.abs(parseFloat(x.getAttribute('data-a')) - parseFloat(slA.value)) < 1e-6) x.setAttribute('aria-pressed','true');
+    });
+  });
+  document.querySelectorAll('[data-a]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      slA.value = btn.getAttribute('data-a');
+      document.querySelectorAll('[data-a]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      drawExp();
+    });
+  });
+
+  slLA.addEventListener('input', function(){
+    drawLog();
+    document.querySelectorAll('[data-la]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    document.querySelectorAll('[data-la]').forEach(function(x){
+      if(Math.abs(parseFloat(x.getAttribute('data-la')) - parseFloat(slLA.value)) < 1e-6) x.setAttribute('aria-pressed','true');
+    });
+  });
+  document.querySelectorAll('[data-la]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      slLA.value = btn.getAttribute('data-la');
+      document.querySelectorAll('[data-la]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      drawLog();
+    });
+  });
+
+  slPx.addEventListener('input', drawInv);
+  slPy.addEventListener('input', drawInv);
+
+  [slTA, slTK, slTB, slTC].forEach(function(sl){
+    sl.addEventListener('input', function(){ drawTf(); syncTf(); });
+  });
+  document.querySelectorAll('[data-base]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      base = btn.getAttribute('data-base');
+      document.querySelectorAll('[data-base]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      drawTf(); syncTf();
+    });
+  });
+  document.getElementById('btnReset').addEventListener('click', function(){
+    slTA.value = 1; slTK.value = 1; slTB.value = 0; slTC.value = 0;
+    drawTf(); syncTf();
+  });
+  document.getElementById('btnDemo').addEventListener('click', function(){
+    if(cur !== 'tf') return;
+    slTA.value = 2; slTK.value = 1; slTB.value = -1; slTC.value = 1;
+    base = 'sq';
+    document.querySelectorAll('[data-base]').forEach(function(x){
+      x.setAttribute('aria-pressed', x.getAttribute('data-base') === 'sq' ? 'true' : 'false');
+    });
+    drawTf(); syncTf();
+  });
+
+  window.addEventListener('resize', function(){
+    if(DRAW[cur]) DRAW[cur]();
+  });
+
+  /* ---------- 启动 ---------- */
+  showTab('overview');
+  document.querySelectorAll('[data-n]').forEach(function(x){
+    if(Math.abs(parseFloat(x.getAttribute('data-n')) - 2) < 1e-6) x.setAttribute('aria-pressed','true');
+  });
+  document.querySelectorAll('[data-a]').forEach(function(x){
+    if(Math.abs(parseFloat(x.getAttribute('data-a')) - 2) < 1e-6) x.setAttribute('aria-pressed','true');
+  });
+  document.querySelectorAll('[data-la]').forEach(function(x){
+    if(Math.abs(parseFloat(x.getAttribute('data-la')) - 2) < 1e-6) x.setAttribute('aria-pressed','true');
+  });
+})();
+</script>
+</body>
+</html>
