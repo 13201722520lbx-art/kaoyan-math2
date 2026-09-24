@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>极限能不能直接代？· 五张判定表</title>
+<style>
+:root{
+  --bg-page:#faf9f6; --bg-2:#f5f4f0; --bg-3:#eeece6;
+  --text-1:#1c1c1a; --text-2:#5f5e5a; --text-3:#8a8880;
+  --line:rgba(0,0,0,.12);
+  --color-text-primary:#1c1c1a;
+  --color-text-secondary:#5f5e5a;
+  --color-text-tertiary:#8a8880;
+  --color-border-secondary:rgba(0,0,0,.3);
+  --color-border-primary:rgba(0,0,0,.45);
+  --ok-bg:#EAF3DE; --ok-fg:#27500A;
+  --und-bg:#FCEBEB; --und-fg:#A32D2D;
+  --cond-bg:#FAEEDA; --cond-fg:#854F0B;
+  --font-mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-page:#17171a; --bg-2:#232327; --bg-3:#2b2b30;
+    --text-1:#f0efe9; --text-2:#b3b1a8; --text-3:#85837c;
+    --line:rgba(255,255,255,.14);
+    --color-text-primary:#f0efe9;
+    --color-text-secondary:#b3b1a8;
+    --color-text-tertiary:#85837c;
+    --color-border-secondary:rgba(255,255,255,.3);
+    --color-border-primary:rgba(255,255,255,.45);
+    --ok-bg:#1e2a13; --ok-fg:#C0DD97;
+    --und-bg:#2e1a1a; --und-fg:#F09595;
+    --cond-bg:#2a2113; --cond-fg:#FAC775;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 20px 60px;background:var(--bg-page);color:var(--text-1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.7}
+main{max-width:880px;margin:0 auto}
+h1{font-size:20px;font-weight:600;margin:0 0 8px}
+h2{font-size:15px;font-weight:600;margin:38px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--line)}
+h3{font-size:14px;font-weight:600;margin:20px 0 8px}
+p{font-size:14px;margin:8px 0}
+.lead{color:var(--text-2)}
+code{font-family:var(--font-mono);font-size:12.5px;background:var(--bg-2);padding:1px 5px;border-radius:4px}
+.big{font-size:15px}
+.ctl{display:flex;align-items:center;gap:14px;margin:16px 0 0;font-size:13px;color:var(--text-2)}
+.ctl input[type=range]{flex:1;accent-color:#BA7517}
+.ctl b{font-family:var(--font-mono);color:var(--text-1)}
+.bars{margin-top:14px}
+.bar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:12.5px}
+.bar .nm{width:74px;color:var(--text-2);flex:none;font-family:var(--font-mono)}
+.bar .track{position:relative;flex:1;height:20px;background:var(--bg-2);border-radius:5px;overflow:hidden}
+.bar .track::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line);z-index:2}
+.bar .fill{position:absolute;top:4px;bottom:4px;border-radius:3px}
+.bar .vl{width:96px;text-align:right;flex:none;font-family:var(--font-mono);color:var(--text-1);font-weight:600}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.b7{font-family:var(--font-mono);font-size:12.5px;padding:6px 14px;border-radius:999px;
+  border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--text-1);cursor:pointer;line-height:1.3}
+.b7:hover{border-color:var(--color-border-primary)}
+.b7[aria-pressed="true"]{background:var(--bg-2);border-color:var(--color-border-primary);font-weight:600}
+.mtx{display:grid;gap:6px;margin-top:14px;align-items:stretch}
+.mtx .hdr{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12.5px;
+  color:var(--text-2);background:var(--bg-3);border-radius:7px;padding:8px 6px;text-align:center;line-height:1.35}
+.mcell{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 8px;
+  border-radius:8px;background:var(--bg-2);font-family:var(--font-mono);font-size:13px;line-height:1.4;min-height:52px}
+.mcell.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.mcell.und{background:var(--und-bg);color:var(--und-fg);font-weight:600}
+.mcell.cond{background:var(--cond-bg);color:var(--cond-fg);font-size:11.5px}
+.mnote{margin:12px 0 0;font-size:13px;color:var(--text-2);min-height:22px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:12px 0 0;font-size:12px;color:var(--text-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:14px 0}
+th,td{border:0.5px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg-2);font-weight:600}
+td.m{font-family:var(--font-mono);white-space:nowrap}
+blockquote{margin:12px 0;padding:10px 16px;border-left:2px solid var(--line);color:var(--text-2);font-size:14px}
+ul,ol{padding-left:22px;font-size:14px}
+li{margin:5px 0}
+footer{margin-top:46px;padding-top:12px;border-top:0.5px solid var(--line);font-size:12px;color:var(--text-3)}
+.kbox{background:var(--ok-bg);color:var(--ok-fg);border-radius:10px;padding:14px 18px;margin:14px 0;font-size:14px;line-height:1.8}
+.kbox b{font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+<main>
+
+<h1>极限能不能直接代？· 五张判定表</h1>
+<p class="lead">
+  你的直觉是对的：<b>麻烦只来自 0 和 ∞</b>。极限值一共只有三种——<code>0</code>、<b>非零常数 c</b>、<code>±∞</code>；
+  运算一共只有五种——加减乘除和乘方。把这些组合穷举出来，<b>45 格里只有 7 格不能直接算</b>，这 7 格就是未定式。
+</p>
+
+<h2>① 先搞清楚：「未定」到底是什么意思</h2>
+<p>「未定」不是说算不出来，而是说 <b>光看两部分的极限值，推不出结果的极限值</b>——还要看具体函数「谁跑得快」。</p>
+<p>最典型的就是 <code>0 · ∞</code>。下面三组乘积，在 <code>x → 0⁺</code> 时<b>形式完全一样</b>（都是「→0 的量」乘「→∞ 的量」），结果却完全不同：</p>
+
+<div class="ctl">
+  <span>x = <b id="xv7">0.001</b></span>
+  <input id="sl7" type="range" min="1" max="6" step="1" value="3">
+  <span style="color:var(--text-3)">← 往右拖，让 x 更接近 0</span>
+</div>
+
+<div class="bars">
+  <div class="bar">
+    <span class="nm">x · (1/x)</span>
+    <div class="track"><div class="fill" id="f1" style="background:#639922"></div></div>
+    <span class="vl" id="v1">1</span>
+  </div>
+  <div class="bar">
+    <span class="nm">x · (1/x²)</span>
+    <div class="track"><div class="fill" id="f2" style="background:#E24B4A"></div></div>
+    <span class="vl" id="v2">1000</span>
+  </div>
+  <div class="bar">
+    <span class="nm">x² · (1/x)</span>
+    <div class="track"><div class="fill" id="f3" style="background:#378ADD"></div></div>
+    <span class="vl" id="v3">0.001</span>
+  </div>
+</div>
+<p class="cap" style="font-size:12.5px;color:var(--text-3);margin-top:10px">
+  条形长度是 log₁₀ 刻度，中线代表「值 = 1」。三组的 A → 0、B → ∞ 都成立，但 A·B 分别稳定在 <b>1</b>、<b>→ +∞</b>、<b>→ 0</b>。
+  同一个 <code>0·∞</code>，三种答案——这就是「未定式」的确切含义。
+</p>
+
+<h2>② 七个未定式，一个也不能少</h2>
+<table>
+<thead><tr><th>未定式</th><th>谁和谁在打架</th><th>为什么不定（直觉）</th><th>标准处理手段</th></tr></thead>
+<tbody>
+<tr><td class="m">0 / 0</td><td>0 与 0</td><td>分子分母都在变小，比值取决于谁跑得快</td><td>因式分解约分 / 等价无穷小 / 洛必达 / 泰勒</td></tr>
+<tr><td class="m">∞ / ∞</td><td>∞ 与 ∞</td><td>分子分母都在变大，比值取决于增长速度之比</td><td>抓大头（同除最高次幂）/ 洛必达</td></tr>
+<tr><td class="m">0 · ∞</td><td>0 与 ∞</td><td>一个要往下压、一个要往上顶</td><td>变形为 <code>0/(1/∞)</code> 或 <code>∞/(1/0)</code>，转成上面两种</td></tr>
+<tr><td class="m">∞ − ∞</td><td>两个同号 ∞</td><td>两个都在变大，差的量级取决于哪边更大</td><td>通分 / 有理化（分子有理化）/ 提公因子</td></tr>
+<tr><td class="m">1<sup>∞</sup></td><td>底数 →1 与指数 →∞</td><td>底数只要不严格等于 1，无穷次方就能放大出任何值</td><td>凑第二重要极限 <code>(1+1/u)^u → e</code>，或 <code>u^v = e^(v·ln u)</code></td></tr>
+<tr><td class="m">0<sup>0</sup></td><td>0 与 0</td><td>底数往 0 缩、指数往 0 缩，两边拉锯</td><td>取对数：<code>e^(0·ln 0)</code> → 转成 <code>0·∞</code></td></tr>
+<tr><td class="m">∞<sup>0</sup></td><td>∞ 与 0</td><td>底数爆掉又被 0 次方拉平</td><td>取对数：<code>e^(0·ln ∞)</code> → 转成 <code>0·∞</code></td></tr>
+</tbody>
+</table>
+
+<blockquote>
+  <b>看出规律了吗：</b>七个未定式里，<b>每一个都是「0 或 ∞ 参与的对抗」</b>。
+  0 是「压缩」，∞ 是「膨胀」，两者方向相反时结果就不确定。
+  反过来，凡是<b>不含 0 也不含 ∞ 的运算</b>（常数 + 常数、常数 × 常数、非零常数 ÷ 常数），一定可以直接算。
+</blockquote>
+
+<h2>③ 五张判定表：穷举所有情况</h2>
+<p>把每个部分的极限值归成三种：<code>0</code>、<code>c</code>（非零常数）、<code>∞</code>。下面按运算符切换，<b>红格 = 未定式，绿格 = 直接算，黄格 = 要看条件</b>。</p>
+
+<div class="tabs">
+  <button class="b7" data-op="add" aria-pressed="false">加法 A + B</button>
+  <button class="b7" data-op="sub" aria-pressed="false">减法 A − B</button>
+  <button class="b7" data-op="mul" aria-pressed="true">乘法 A · B</button>
+  <button class="b7" data-op="div" aria-pressed="false">除法 A / B</button>
+  <button class="b7" data-op="pow" aria-pressed="false">乘方 A^B</button>
+</div>
+
+<div class="mtx" id="mtx"></div>
+<p class="mnote" id="mnote"></p>
+
+<div class="legend">
+  <span><i style="background:var(--ok-bg);border:0.5px solid var(--ok-fg)"></i>可以直接算</span>
+  <span><i style="background:var(--und-bg);border:0.5px solid var(--und-fg)"></i>未定式，必须变形</span>
+  <span><i style="background:var(--cond-bg);border:0.5px solid var(--cond-fg)"></i>看条件（符号 / 底数大小）</span>
+</div>
+
+<h2>④ 回到例 1-2：为什么它敢直接乘</h2>
+<p>原题 <code>lim (arctan x)·e^(−x)·x</code>，把三因子按类型归类：</p>
+<table>
+<thead><tr><th>因子</th><th>类型</th><th>对应表里的符号</th></tr></thead>
+<tbody>
+<tr><td class="m">arctan x</td><td>收敛到 −π/2 ≈ −1.5708</td><td class="m">c（非零常数）</td></tr>
+<tr><td class="m">e^(−x)</td><td>→ +∞</td><td class="m">∞</td></tr>
+<tr><td class="m">x</td><td>→ −∞</td><td class="m">∞</td></tr>
+</tbody>
+</table>
+<p>只看<b>乘法表</b>（点上面的「乘法 A · B」）：</p>
+<ul>
+  <li><code>c · ∞</code> 落在第 2 行第 3 列 → <b>绿格，可以算</b>，结果是 <code>∞</code></li>
+  <li><code>∞ · ∞</code> 落在第 3 行第 3 列 → <b>绿格，可以算</b>，结果是 <code>∞</code></li>
+</ul>
+<div class="kbox">
+  两次乘法<b>都踩在绿格上</b>，一次红格都没碰到 ⇒ 直接乘是合法的。<br>
+  所以 <b>(−π/2)·(+∞)·(−∞)</b> 一路算下来，只剩符号要自己判：<b>负 × 正 × 负 = 正</b> ⇒ <b>+∞</b>。
+</div>
+<p><b>对比一下：</b>如果原题是 <code>lim(x→0) (arctan x) · (1/x)</code>，那就变成 <code>0 · ∞</code>——踩红格了，必须变形（化成 <code>arctan x / x → 1</code>）才能算。</p>
+
+<h2>⑤ 做题时的心智流程</h2>
+<ol>
+  <li><b>代入：</b>把每一部分单独求极限，写成一个符号（<code>0</code> / <code>c</code> / <code>∞</code>）。</li>
+  <li><b>对照：</b>按运算符查上面对应的表。<span style="color:var(--ok-fg)">绿</span>→ 结束，直接写答案；<span style="color:var(--und-fg)">红</span>→ 进第 3 步。</li>
+  <li><b>变形：</b>按「七个未定式总表」里那一列的手段处理，<b>目标是把红格变成绿格</b>（通常是化归成 <code>0/0</code> 或 <code>∞/∞</code> 再上洛必达 / 等价替换）。</li>
+</ol>
+<blockquote>
+  <b>口诀：</b>先定位（每部分去哪）→ 再对照（绿格直接写，红格要变形）→ 最后才谈手段。<br>
+  <b>不要一上来就洛必达</b>——洛必达只对 <code>0/0</code> 和 <code>∞/∞</code> 两种形态合法，用在别处会直接算错。
+</blockquote>
+
+<h2>⑥ 一个特别容易混的点</h2>
+<table>
+<thead><tr><th>写法</th><th>含义</th><th>能不能直接算</th></tr></thead>
+<tbody>
+<tr><td class="m">1<sup>∞</sup></td><td>底数<b>趋于</b> 1（但每一点都不是 1），指数趋于 ∞</td><td><b style="color:var(--und-fg)">未定式</b>。例：<code>(1+1/x)^x → e</code></td></tr>
+<tr><td class="m">1<sup>c</sup></td><td>底数趋于 1，指数趋于普通常数 c</td><td>可直接算，= 1</td></tr>
+<tr><td class="m">0 / 0</td><td>分子分母都<b>趋于</b> 0</td><td><b style="color:var(--und-fg)">未定式</b></td></tr>
+<tr><td class="m">0 / c</td><td>分子趋于 0，分母趋于非零常数</td><td>可直接算，= 0</td></tr>
+<tr><td class="m">c / 0</td><td>分子趋于非零常数，分母趋于 0</td><td>可直接算，= ∞（符号看两侧）</td></tr>
+</tbody>
+</table>
+<p class="lead">关键区分：<b>「恒等于」和「趋于」是两回事</b>。恒等于 1 的底数的 ∞ 次方确实是 1；但<b>趋于</b> 1 的底数不是——它总有那么一点点偏差，无穷次方会把这点偏差放大到任何值。</p>
+
+<footer>考研数学二 · 第 1 章 极限 · 图表 007　｜　配套笔记：<code>../笔记/004-极限能不能直接代-未定式判定.md</code></footer>
+
+</main>
+
+<script>
+(function(){
+  var OPS = {
+    add: {
+      title:'加法 A + B',
+      cols:['B → 0','B → c','B → ∞'],
+      rows:['A → 0','A → c','A → ∞'],
+      cells:[
+        [{k:'ok',v:'0'},                       {k:'ok',v:'c'},                        {k:'ok',v:'∞'}],
+        [{k:'ok',v:'c'},                       {k:'ok',v:'c'},                        {k:'ok',v:'∞'}],
+        [{k:'ok',v:'∞'},                       {k:'ok',v:'∞'},                        {k:'cond',v:'同号 → ∞<br>异号 → ∞ − ∞ 未定'}]
+      ],
+      note:'加法唯一的雷：两个无穷大异号相加（本质就是 ∞ − ∞）。同号相加，直接把量级相加即可。',
+      hl:[[2,2]]
+    },
+    sub: {
+      title:'减法 A − B',
+      cols:['B → 0','B → c','B → ∞'],
+      rows:['A → 0','A → c','A → ∞'],
+      cells:[
+        [{k:'ok',v:'0'},                       {k:'ok',v:'c'},                        {k:'ok',v:'∞'}],
+        [{k:'ok',v:'c'},                       {k:'ok',v:'0'},                        {k:'ok',v:'∞'}],
+        [{k:'ok',v:'∞'},                       {k:'ok',v:'∞'},                        {k:'cond',v:'同号 → ∞ − ∞ 未定<br>异号 → ∞'}]
+      ],
+      note:'注意 c − c = 0（还是可以直接算，结果就是 0）。真正会出事的是两个同号无穷相减。',
+      hl:[[2,2]]
+    },
+    mul: {
+      title:'乘法 A · B',
+      cols:['B → 0','B → c','B → ∞'],
+      rows:['A → 0','A → c','A → ∞'],
+      cells:[
+        [{k:'ok',v:'0'},                       {k:'ok',v:'0'},                        {k:'und',v:'0 · ∞ 未定'}],
+        [{k:'ok',v:'0'},                       {k:'ok',v:'c'},                        {k:'ok',v:'∞'}],
+        [{k:'und',v:'0 · ∞ 未定'},              {k:'ok',v:'∞'},                        {k:'ok',v:'∞'}]
+      ],
+      note:'例 1-2 走的就是这张表：c · ∞（绿）→ ∞ · ∞（绿），全程没踩到红格，所以能直接乘。',
+      hl:[[0,2],[2,0]]
+    },
+    div: {
+      title:'除法 A / B',
+      cols:['B → 0','B → c','B → ∞'],
+      rows:['A → 0','A → c','A → ∞'],
+      cells:[
+        [{k:'und',v:'0 / 0 未定'},              {k:'ok',v:'0'},                        {k:'ok',v:'0'}],
+        [{k:'ok',v:'∞'},                       {k:'ok',v:'c'},                        {k:'ok',v:'0'}],
+        [{k:'ok',v:'∞'},                       {k:'ok',v:'∞'},                        {k:'und',v:'∞ / ∞ 未定'}]
+      ],
+      note:'注意两个绿的「看似危险」格：0/c = 0 和 c/0 = ∞ 都是可以直接算的，别习惯性当成未定式。',
+      hl:[[0,0],[2,2]]
+    },
+    pow: {
+      title:'乘方 A^B（底数取正值）',
+      cols:['B → 0','B → c','B → ∞'],
+      rows:['A → 0⁺','A → 1','A → c（>0，≠1）','A → +∞'],
+      cells:[
+        [{k:'und',v:'0⁰ 未定'},                {k:'cond',v:'c>0 → 0<br>c<0 → ∞'},      {k:'ok',v:'0'}],
+        [{k:'ok',v:'1'},                       {k:'ok',v:'1'},                        {k:'und',v:'1^∞ 未定'}],
+        [{k:'ok',v:'1'},                       {k:'ok',v:'c^c'},                      {k:'cond',v:'c>1 → ∞<br>0<c<1 → 0'}],
+        [{k:'und',v:'∞⁰ 未定'},                {k:'cond',v:'c>0 → ∞<br>c<0 → 0'},      {k:'ok',v:'∞'}]
+      ],
+      note:'底数整行都是「→1」时才叫 1^∞；如果底数恒等于 1，那 1^∞ = 1，可以直接算。这一行的存在，就是为了记住那个「趋于」和「等于」的区别。',
+      hl:[[0,0],[1,2],[3,0]]
+    }
+  };
+
+  var cur = 'mul';
+  var mtx = document.getElementById('mtx');
+  var mnote = document.getElementById('mnote');
+
+  function render(op){
+    cur = op;
+    var d = OPS[op];
+    var ncol = d.cols.length;
+    mtx.style.gridTemplateColumns = 'auto repeat(' + ncol + ', minmax(0,1fr))';
+    var html = '';
+    html += '<div class="hdr" style="background:transparent"></div>';
+    d.cols.forEach(function(c){ html += '<div class="hdr">' + c + '</div>'; });
+    d.cells.forEach(function(row, i){
+      html += '<div class="hdr">' + d.rows[i] + '</div>';
+      row.forEach(function(cell){
+        html += '<div class="mcell ' + cell.k + '">' + cell.v + '</div>';
+      });
+    });
+    mtx.innerHTML = html;
+
+    var undCount = 0;
+    d.cells.forEach(function(row){ row.forEach(function(c){ if(c.k === 'und') undCount++; }); });
+    var total = 0; d.cells.forEach(function(row){ total += row.length; });
+    mnote.innerHTML = '<b>' + d.title + '</b>　共 ' + total + ' 格，其中 ' + undCount + ' 格是未定式。　' + d.note;
+  }
+
+  document.querySelectorAll('.b7').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.b7').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      render(btn.dataset.op);
+    });
+  });
+
+  var sl = document.getElementById('sl7');
+  var f1 = document.getElementById('f1'), f2 = document.getElementById('f2'), f3 = document.getElementById('f3');
+  var v1 = document.getElementById('v1'), v2 = document.getElementById('v2'), v3 = document.getElementById('v3');
+  var xv = document.getElementById('xv7');
+  var RANGE = 6;
+
+  function fmt(v){
+    if(v >= 1e5) return v.toExponential(2).replace('e+','×10^');
+    if(v >= 1) return String(Math.round(v*1000)/1000);
+    if(v >= 0.001) return String(Math.round(v*1000)/1000);
+    return v.toExponential(2).replace('e-','×10^-');
+  }
+
+  function setBar(el, lg){
+    var pct = Math.max(0, Math.min(1, Math.abs(lg)/RANGE)) * 50;
+    if(pct < 1.2) pct = 1.2;
+    if(lg >= 0){
+      el.style.left = '50%'; el.style.width = pct + '%';
+    } else {
+      el.style.left = (50 - pct) + '%'; el.style.width = pct + '%';
+    }
+  }
+
+  function updateBars(){
+    var k = parseInt(sl.value, 10);
+    var x = Math.pow(10, -k);
+    xv.textContent = k <= 3 ? x.toFixed(k) : '0.' + new Array(k).join('0') + '1';
+    var a = x;
+    var b1 = 1/x, b2 = 1/(x*x), b3 = 1/x;
+    var r1 = a*b1, r2 = a*b2, r3 = a*a*b3;
+    setBar(f1, Math.log10(r1));
+    setBar(f2, Math.log10(r2));
+    setBar(f3, Math.log10(r3));
+    v1.textContent = '1';
+    v2.textContent = k <= 3 ? String(Math.round(r2)) : '10^' + k;
+    v3.textContent = k <= 3 ? String(Math.round(r3*1000)/1000) : '10^-' + k;
+  }
+
+  sl.addEventListener('input', updateBars);
+  updateBars();
+  render('mul');
+  document.querySelector('[data-op="mul"]').setAttribute('aria-pressed','true');
+})();
+</script>
+</body>
+</html>
