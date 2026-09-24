@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>例 1-2 最后一步 · 三因子符号分解器</title>
+<style>
+:root{
+  --bg-page:#faf9f6; --bg-2:#f5f4f0;
+  --text-1:#1c1c1a; --text-2:#5f5e5a; --text-3:#8a8880;
+  --line:rgba(0,0,0,.12);
+  --color-text-primary:#1c1c1a;
+  --color-text-secondary:#5f5e5a;
+  --color-text-tertiary:#8a8880;
+  --color-border-secondary:rgba(0,0,0,.3);
+  --color-border-primary:rgba(0,0,0,.45);
+  --ok:#3B6D11; --bad:#A32D2D;
+  --font-mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-page:#17171a; --bg-2:#232327;
+    --text-1:#f0efe9; --text-2:#b3b1a8; --text-3:#85837c;
+    --line:rgba(255,255,255,.14);
+    --color-text-primary:#f0efe9;
+    --color-text-secondary:#b3b1a8;
+    --color-text-tertiary:#85837c;
+    --color-border-secondary:rgba(255,255,255,.3);
+    --color-border-primary:rgba(255,255,255,.45);
+    --ok:#97C459; --bad:#F09595;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 20px 60px;background:var(--bg-page);color:var(--text-1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.7}
+main{max-width:840px;margin:0 auto}
+h1{font-size:20px;font-weight:600;margin:0 0 8px}
+h2{font-size:15px;font-weight:600;margin:36px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--line)}
+p{font-size:14px;margin:8px 0}
+.lead{color:var(--text-2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.b6{font-family:var(--font-mono);font-size:12px;padding:6px 12px;border-radius:999px;
+  border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--text-1);cursor:pointer;line-height:1.3}
+.b6:hover{border-color:var(--color-border-primary)}
+.b6[aria-pressed="true"]{background:var(--bg-2);border-color:var(--color-border-primary);font-weight:600}
+#bWrong[aria-pressed="true"]{color:var(--bad)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;margin-top:14px}
+canvas{width:100%;height:265px;display:block;background:var(--bg-2);border-radius:10px;border:0.5px solid var(--line)}
+.cap{font-size:12.5px;color:var(--text-3);margin:6px 0 0;line-height:1.55}
+.ctl{display:flex;align-items:center;gap:14px;margin:18px 0 0;font-size:13px;color:var(--text-2)}
+.ctl input[type=range]{flex:1;accent-color:#BA7517}
+.ctl b{font-family:var(--font-mono);color:var(--text-1);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0 0}
+.mc{background:var(--bg-2);border-radius:10px;padding:12px 14px}
+.mc .lbl{font-size:12px;color:var(--text-3);font-family:var(--font-mono)}
+.mc .val{font-size:19px;font-weight:600;font-family:var(--font-mono);margin-top:3px;line-height:1.25;word-break:break-all}
+.mc.hot .val{color:var(--ok)}
+.mc.cold .val{color:var(--bad)}
+.chain{margin:14px 0 0;padding:14px 16px;border-radius:10px;background:var(--bg-2);
+  font-family:var(--font-mono);font-size:15px;text-align:center}
+.chain .res{font-size:19px;font-weight:600}
+.chain .res.ok{color:var(--ok)}
+.chain .res.bad{color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:14px 0;font-family:var(--font-mono)}
+th,td{border:0.5px solid var(--line);padding:6px 10px;text-align:right}
+th{background:var(--bg-2);font-weight:600;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif}
+td:first-child,th:first-child{text-align:center}
+code{font-family:var(--font-mono);font-size:12.5px;background:var(--bg-2);padding:1px 5px;border-radius:4px}
+blockquote{margin:12px 0;padding:8px 14px;border-left:2px solid var(--line);color:var(--text-2);font-size:14px}
+ul,ol{padding-left:22px;font-size:14px}
+li{margin:4px 0}
+footer{margin-top:46px;padding-top:12px;border-top:0.5px solid var(--line);font-size:12px;color:var(--text-3)}
+.warn{color:var(--bad)}
+</style>
+</head>
+<body>
+<main>
+
+<h1>例 1-2 最后一步 · 三因子符号分解器</h1>
+<p class="lead">
+  题目：<code>lim<sub>x→−∞</sub> (arctan x) · e<sup>−x</sup> · x</code>。
+  讲义最后那一步 <code>(−π/2)·(+∞)·(−∞) = +∞</code> <b>不是算出来的，是判符号判出来的</b> ——
+  把三个因子各自的去向确定下来，符号一乘，结论就出来了。
+</p>
+
+<h2>① 先看左边：arctan x 到底趋向谁</h2>
+<p>这是整题最容易翻车的一步。很多人心里默认 arctan 都是往 <code>+π/2</code> 跑，忽略了方向。</p>
+
+<div class="chips">
+  <button class="b6" id="bCorrect" aria-pressed="true" data-m="correct">arctan x → −π/2　✅</button>
+  <button class="b6" id="bWrong" aria-pressed="false" data-m="wrong">误当成 +π/2　✗ 看看会怎样</button>
+</div>
+
+<div class="grid2">
+  <div>
+    <canvas id="cv6a"></canvas>
+    <p class="cap">左图：y = arctan x。值域被锁死在 (−π/2, π/2) 里，x 往左走到 −∞，曲线从<b>上方</b>贴住水平线 y = −π/2，永远碰不到。</p>
+  </div>
+  <div>
+    <canvas id="cv6b"></canvas>
+    <p class="cap">右图：整个乘积 f(x) = arctan x · e<sup>−x</sup> · x 的走势（纵轴是 log₁₀，否则数值太大画不下）。x 越负，它一路往上冲。</p>
+  </div>
+</div>
+
+<h2>② 拖动滑块，让 x 真的往 −∞ 跑</h2>
+<div class="ctl">
+  <span>x = <b id="xv">−5.0</b></span>
+  <input id="sl6" type="range" min="-15" max="-1" step="0.1" value="-5">
+</div>
+
+<div class="metrics">
+  <div class="mc"><div class="lbl">arctan x</div><div class="val" id="m1">—</div></div>
+  <div class="mc"><div class="lbl">e<sup>−x</sup></div><div class="val" id="m2">—</div></div>
+  <div class="mc"><div class="lbl">x</div><div class="val" id="m3">—</div></div>
+  <div class="mc" id="mc4"><div class="lbl">三因子乘积</div><div class="val" id="m4">—</div></div>
+</div>
+
+<div class="chain" id="chain6">—</div>
+
+<h2>③ 三个因子各自的去向（固定结论）</h2>
+<table>
+<thead><tr><th>x → −∞</th><th>因子</th><th>趋向</th><th>是常数还是无穷</th><th>符号</th></tr></thead>
+<tbody>
+<tr><td>第 1 个</td><td>arctan x</td><td>−π/2 ≈ −1.5708</td><td>非零<b>有限常数</b></td><td>−</td></tr>
+<tr><td>第 2 个</td><td>e<sup>−x</sup></td><td>+∞（指数爆炸）</td><td>无穷大</td><td>+</td></tr>
+<tr><td>第 3 个</td><td>x</td><td>−∞</td><td>无穷大</td><td>−</td></tr>
+</tbody>
+</table>
+
+<p><b>合法性来自哪里？</b> 有限个因子的乘积，只要每个因子的极限都存在（有限数或定号的无穷大），就可以把极限分别算完再相乘。这里三个因子都「有确定去向」，且<b>没有出现 0·∞</b>，所以直接相乘是被允许的。</p>
+
+<table id="tab6">
+<thead><tr><th>x</th><th>arctan x</th><th>e<sup>−x</sup></th><th>x</th><th>乘积</th></tr></thead>
+<tbody></tbody>
+</table>
+<p class="cap">乘积列从 2 一路涨到 7 千万，且<b>始终为正</b>——这就是「→ +∞」的直接证据。</p>
+
+<h2>④ 三个常见的坑</h2>
+<ul>
+  <li><b>坑 1：arctan x 的符号。</b> <code>x → +∞</code> 时它才是 <code>+π/2</code>；<code>x → −∞</code> 时是 <code>−π/2</code>。这里差一个负号，最终答案就完全反了（<span class="warn">会得到 −∞</span>）。</li>
+  <li><b>坑 2：把 <code>(+∞)·(−∞)</code> 当成未定式。</b> 它不是。<code>∞·∞</code> 永远是 ∞，只不过要判符号：<b>负 × 负 = 正</b>，所以是 <code>+∞</code>。</li>
+  <li><b>坑 3：只写「= ∞」。</b> 数二里无穷大的比较必须带符号，因为 <code>+∞</code> 和 <code>−∞</code> 在后续（比如极限存在性、渐近线、间断点分类）里是两回事。</li>
+</ul>
+
+<blockquote>
+  <b>口诀：</b>碰到「常数 × 无穷 × 无穷」，别急着套洛必达。先做两件事——<b>定位</b>（每个因子各自去哪）、<b>定号</b>（乘起来是正是负）。只要不出现 0·∞、∞−∞、0/0，答案当场就出来了，一行写完。
+</blockquote>
+
+<h2>⑤ 一句话总结这一步</h2>
+<p style="font-family:var(--font-mono);font-size:14.5px;line-height:2">
+  arctan x → −π/2（负常数）<br>
+  e<sup>−x</sup> → +∞（正无穷）<br>
+  x → −∞（负无穷）<br>
+  ── 乘积符号 = (−)·(+)·(−) = <b style="color:var(--ok)">+</b>，量级是无穷 ⇒ <b style="color:var(--ok)">+∞</b>
+</p>
+
+<footer>考研数学二 · 第 1 章 极限 · 图表 006　｜　配套答疑：<code>../答疑/003-例1-2最后一步的符号运算.md</code></footer>
+
+</main>
+
+<script>
+(function(){
+  var cvA = document.getElementById('cv6a');
+  var cvB = document.getElementById('cv6b');
+  var sl  = document.getElementById('sl6');
+  var mode = 'correct';
+  var SUP = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻','+':''};
+
+  function theme(){
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var cs = getComputedStyle(document.documentElement);
+    function v(n,f){ var s = cs.getPropertyValue(n).trim(); return s || f; }
+    return {
+      dark: dark,
+      axis: v('--color-text-tertiary','#8a8880'),
+      text: v('--color-text-secondary','#5f5e5a'),
+      faint: v('--color-text-tertiary','#8a8880'),
+      grid: dark ? 'rgba(255,255,255,.10)' : 'rgba(0,0,0,.07)',
+      amber: dark ? '#EF9F27' : '#BA7517',
+      blue:  dark ? '#85B7EB' : '#378ADD',
+      okc:   dark ? '#97C459' : '#639922',
+      badc:  dark ? '#F09595' : '#E24B4A'
+    };
+  }
+
+  function fit(cv){
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth || 380, h = cv.clientHeight || 265;
+    cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+    var ctx = cv.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {ctx:ctx, w:w, h:h};
+  }
+
+  function atanA(x){ return Math.atan(x); }
+  function prod(x){
+    var a = (mode === 'wrong') ? Math.PI/2 : Math.atan(x);
+    return a * Math.exp(-x) * x;
+  }
+  function sup(n){ return String(n).split('').map(function(c){ return SUP[c] !== undefined ? SUP[c] : c; }).join(''); }
+  function sci(v){
+    var a = Math.abs(v);
+    if(a >= 1e-3 && a < 1e5) return v.toFixed(2);
+    if(a === 0) return '0';
+    var e = Math.floor(Math.log10(a));
+    var m = v / Math.pow(10, e);
+    return m.toFixed(2) + '×10' + sup(e);
+  }
+
+  function drawLeft(){
+    var f = fit(cvA), ctx = f.ctx, w = f.w, h = f.h, T = theme();
+    ctx.clearRect(0,0,w,h);
+    var padL=48, padR=22, padT=20, padB=30;
+    var xmin=-17, xmax=3, ymin=-2.15, ymax=2.15;
+    var plotW=w-padL-padR, plotH=h-padT-padB;
+    function px(x){ return padL + (x-xmin)/(xmax-xmin)*plotW; }
+    function py(y){ return padT + (ymax-y)/(ymax-ymin)*plotH; }
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = T.grid;
+    [-1.5708, 1.5708].forEach(function(y){
+      ctx.beginPath(); ctx.moveTo(px(xmin),py(y)); ctx.lineTo(px(xmax),py(y)); ctx.stroke();
+    });
+
+    ctx.strokeStyle = T.axis;
+    ctx.beginPath(); ctx.moveTo(px(xmin), py(0)); ctx.lineTo(px(xmax)-3, py(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px(0), py(ymin)); ctx.lineTo(px(0), py(ymax)+3); ctx.stroke();
+
+    ctx.save();
+    ctx.setLineDash([6,4]); ctx.lineWidth = 1.2;
+    ctx.strokeStyle = (mode === 'wrong') ? T.badc : T.amber;
+    var ay = (mode === 'wrong') ? 1.5708 : -1.5708;
+    ctx.beginPath(); ctx.moveTo(px(xmin)+4, py(ay)); ctx.lineTo(px(xmax), py(ay)); ctx.stroke();
+    ctx.restore();
+
+    ctx.beginPath();
+    for(var i=0;i<=400;i++){
+      var x = xmin + i/400*(xmax-xmin);
+      var X = px(x), Y = py(Math.atan(x));
+      if(i) ctx.lineTo(X,Y); else ctx.moveTo(X,Y);
+    }
+    ctx.strokeStyle = T.amber; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    var cx = parseFloat(sl.value);
+    var cyv = Math.atan(cx);
+    ctx.save();
+    ctx.setLineDash([3,3]); ctx.strokeStyle = T.faint; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px(cx), py(0)); ctx.lineTo(px(cx), py(cyv)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px(cx), py(cyv)); ctx.lineTo(px(0), py(cyv)); ctx.stroke();
+    ctx.restore();
+
+    ctx.beginPath(); ctx.arc(px(cx), py(cyv), 4.5, 0, Math.PI*2);
+    ctx.fillStyle = (mode === 'wrong') ? T.badc : T.amber; ctx.fill();
+
+    ctx.beginPath(); ctx.arc(px(xmin), py(-1.5708), 4, 0, Math.PI*2);
+    ctx.fillStyle = (mode === 'wrong') ? T.badc : T.amber; ctx.fill();
+
+    ctx.font = '12px system-ui,sans-serif';
+    ctx.fillStyle = (mode === 'wrong') ? T.badc : T.amber;
+    ctx.textAlign = 'left';
+    ctx.fillText('y = −π/2', px(xmin)+75, py(-1.5708) - 8);
+    ctx.fillStyle = T.faint;
+    ctx.fillText('y = π/2', px(xmin)+75, py(1.5708) - 8);
+
+    ctx.fillStyle = T.text;
+    ctx.fillText('x', px(xmax)-8, py(0)+16);
+    ctx.fillText('arctan x 从上方贴住 −π/2', px(xmin)+8, py(-1.5708) + 20);
+  }
+
+  function drawRight(){
+    var f = fit(cvB), ctx = f.ctx, w = f.w, h = f.h, T = theme();
+    ctx.clearRect(0,0,w,h);
+    var padL=46, padR=22, padT=20, padB=30;
+    var xmin=-15, xmax=-1, ymin=-9, ymax=9;
+    var plotW=w-padL-padR, plotH=h-padT-padB;
+    function px(x){ return padL + (x-xmin)/(xmax-xmin)*plotW; }
+    function py(y){ return padT + (ymax-y)/(ymax-ymin)*plotH; }
+
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid;
+    [-6,0,6].forEach(function(y){
+      ctx.beginPath(); ctx.moveTo(px(xmin),py(y)); ctx.lineTo(px(xmax),py(y)); ctx.stroke();
+    });
+
+    ctx.strokeStyle = T.axis;
+    ctx.beginPath(); ctx.moveTo(px(xmin), py(0)); ctx.lineTo(px(xmax)-3, py(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px(xmin), py(ymin)); ctx.lineTo(px(xmin), py(ymax)); ctx.stroke();
+
+    ctx.beginPath();
+    for(var i=0;i<=300;i++){
+      var x = xmin + i/300*(xmax-xmin);
+      var v = prod(x);
+      if(Math.abs(v) < 1e-12) continue;
+      var lg = Math.log10(Math.abs(v)) * (v < 0 ? -1 : 1);
+      var X = px(x), Y = py(Math.max(ymin, Math.min(ymax, lg)));
+      if(i) ctx.lineTo(X,Y); else ctx.moveTo(X,Y);
+    }
+    ctx.strokeStyle = (mode === 'wrong') ? T.badc : T.blue;
+    ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.stroke();
+
+    var cx = parseFloat(sl.value);
+    var cv = prod(cx);
+    var clg = Math.log10(Math.abs(cv)) * (cv < 0 ? -1 : 1);
+    ctx.beginPath(); ctx.arc(px(cx), py(clg), 4.5, 0, Math.PI*2);
+    ctx.fillStyle = (mode === 'wrong') ? T.badc : T.blue; ctx.fill();
+
+    ctx.font = '12px system-ui,sans-serif';
+    ctx.fillStyle = T.faint; ctx.textAlign = 'left';
+    ctx.fillText('10⁹', 8, py(9) + 4);
+    ctx.fillText('10⁰', 8, py(0) + 4);
+    ctx.fillText('10⁻⁹', 4, py(-9) + 4);
+    ctx.fillStyle = T.text;
+    ctx.fillText('乘积 |f(x)| 的量级', px(-14.6), py(8.2));
+    ctx.fillText('← x 越负', px(-14.6), py(-8.2));
+  }
+
+  function update(){
+    var x = parseFloat(sl.value);
+    var a = Math.atan(x);
+    var e = Math.exp(-x);
+    var p = prod(x);
+    document.getElementById('xv').textContent = '−' + Math.abs(x).toFixed(1);
+    document.getElementById('m1').textContent = a.toFixed(4);
+    document.getElementById('m2').textContent = sci(e);
+    document.getElementById('m3').textContent = '−' + Math.abs(x).toFixed(1);
+    document.getElementById('m4').textContent = (p > 0 ? '+' : '−') + sci(Math.abs(p));
+
+    var mc4 = document.getElementById('mc4');
+    mc4.className = 'mc ' + (p > 0 ? 'hot' : 'cold');
+
+    var T = theme();
+    var sign = p > 0 ? '+' : '−';
+    var aTxt = (mode === 'wrong') ? '+π/2' : '−π/2';
+    document.getElementById('chain6').innerHTML =
+      '('+aTxt+') &nbsp;×&nbsp; (+∞) &nbsp;×&nbsp; (−∞) &nbsp;=&nbsp; <span class="res '+(p>0?'ok':'bad')+'">'+sign+'∞</span>'
+      + '<div style="font-size:12px;color:'+T.faint+';margin-top:4px;font-family:inherit">'
+      + (mode === 'wrong'
+          ? '你把 arctan x 当成了 +π/2 —— 符号链变成 (+)(+)(−) = −，答案就是 −∞'
+          : '三个因子符号：负 · 正 · 负 ⇒ 结果为正')
+      + '</div>';
+
+    var tbody = document.querySelector('#tab6 tbody');
+    var rows = [-1,-3,-5,-10,-15];
+    var html = '';
+    rows.forEach(function(xx){
+      var aa = (mode === 'wrong') ? Math.PI/2 : Math.atan(xx);
+      var pp = aa * Math.exp(-xx) * xx;
+      html += '<tr><td>'+xx+'</td><td>'+aa.toFixed(4)+'</td><td>'+sci(Math.exp(-xx))+'</td>'
+            + '<td>'+xx+'</td><td style="color:var('+(pp>0?'--ok':'--bad')+');font-weight:600">'
+            + (pp>0?'+':'−') + sci(Math.abs(pp)) + '</td></tr>';
+    });
+    tbody.innerHTML = html;
+
+    drawLeft();
+    drawRight();
+  }
+
+  function setMode(m){
+    mode = m;
+    document.getElementById('bCorrect').setAttribute('aria-pressed', m==='correct' ? 'true' : 'false');
+    document.getElementById('bWrong').setAttribute('aria-pressed', m==='wrong' ? 'true' : 'false');
+    update();
+  }
+
+  document.getElementById('bCorrect').addEventListener('click', function(){ setMode('correct'); });
+  document.getElementById('bWrong').addEventListener('click', function(){ setMode('wrong'); });
+  sl.addEventListener('input', update);
+  window.addEventListener('resize', update);
+
+  update();
+})();
+</script>
+</body>
+</html>
